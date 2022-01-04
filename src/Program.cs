@@ -10,10 +10,10 @@
 
             Console.WriteLine("Starting Hell!");
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < InternalProgramData.BotCount; i++)
             {
-                //Download posts on 64 threads 🥶👌
-                Thread x = new(() => botSys.GetShitPost(i * 2));
+                //Execute bots according to the ammount specified on BotCount 🥶👌
+                Thread x = new(() => botSys.StartBot(i * 2));
                 x.Name = "Shitpost bot n" + i;
                 x.IsBackground = true;
                 x.Start();
