@@ -5,7 +5,7 @@
         public static bool collectionOnProgress = false;
         public static void CallGC()
         {
-            while (true)
+            while (!InternalProgramData.STOPPROGRAM)
             {
                 Process pro = Process.GetCurrentProcess();
                 bool shouldCollect = false;

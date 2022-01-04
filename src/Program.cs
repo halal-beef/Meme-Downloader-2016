@@ -4,6 +4,7 @@
     {
         public static void Main()
         {
+            int timesWePointed = 0;
             BotHandler botSys = new();
             Console.WriteLine("Making Dirs...");
             Directory.CreateDirectory("Shitposs");
@@ -21,9 +22,12 @@
 
 
             new Thread(() => OptimizeMemory.CallGC()).Start();
-            
-            
+
             Console.ReadKey();
+            Console.Clear();
+
+            InternalProgramData.STOPPROGRAM = true;
+            Thread.Sleep(10000);
         }
     }
 }

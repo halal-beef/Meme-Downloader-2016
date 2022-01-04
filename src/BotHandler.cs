@@ -14,7 +14,7 @@
                 }
                 Random rand = new();
 
-                while (true)
+                while (!InternalProgramData.STOPPROGRAM)
                 {
                     if (!OptimizeMemory.collectionOnProgress)
                     {
@@ -33,12 +33,12 @@
 
                         string usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
                         string PathToResult = Environment.CurrentDirectory + @"/Shitposs/" + usableName;
-                        string extension = Path.GetExtension(PathToResult);
 
-                        if (extension != "jpg" || extension != "png" || extension != "gif" || extension != "jpeg" || extension != "mp4")
+                        if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
                         {
                             PathToResult += ".htm";
                         }
+
 
                         if (!File.Exists(PathToResult))
                         {
@@ -69,12 +69,16 @@
                         Thread.Sleep(5050);
                     }
                 }
+                BotStatus.aliveBots.RemoveAt(0);
             }
             catch
             {
-                BotStatus.aliveBots.RemoveAt(0);
-                Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated, Bots Left: {BotStatus.aliveBots.Count}");
-                CheckAndReviveBots();
+                if (!InternalProgramData.STOPPROGRAM)
+                {
+                    BotStatus.aliveBots.RemoveAt(0);
+                    Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated, Bots Left: {BotStatus.aliveBots.Count}");
+                    CheckAndReviveBots();
+                }
             }
         }
         public void CheckAndReviveBots()
