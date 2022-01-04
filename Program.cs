@@ -19,8 +19,8 @@ namespace ShitpostingMachine
 
             for (int i = 0; i < 64; i++)
             {
-                //Download shit on 64 threads 🥶👌
-                Thread x = new(() => GetShitPost());
+                //Download posts on 64 threads 🥶👌
+                Thread x = new(() => GetShitPost(i * 2));
                 x.Name = "Shitpost bot n" + i;
                 x.IsBackground = true;
                 x.Start();
@@ -28,12 +28,15 @@ namespace ShitpostingMachine
             Console.ReadKey();
         }
 
-        public static void GetShitPost()
+        public static void GetShitPost(int timeOut = 50)
         {
             try
             {
+                Random rand = new();
+                
                 while (true)
                 {
+                    Thread.Sleep(timeOut + rand.Next(0, timeOut));
                     var Result = JObject.Parse(
                         JArray.Parse(
 
@@ -53,6 +56,7 @@ namespace ShitpostingMachine
                         using (FileStream fs = File.Create(PathToResult))
                         {
                             HttpClient httpClient = new();
+
                             HttpResponseMessage hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
 
                             try
