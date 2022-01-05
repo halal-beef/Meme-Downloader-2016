@@ -2,6 +2,7 @@
 {
     internal struct InternalProgramData
     {
+        public static string TargetFolder = Environment.CurrentDirectory + @"\Shitposs\";
         public static int BotCount = 32;
         public static string TargetSubReddit0 = "";
         public static string TargetSubReddit1 = "";

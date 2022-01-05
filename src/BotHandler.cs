@@ -2,6 +2,7 @@
 {
     internal class BotHandler
     {
+        private static bool tests = true;
         public static Object locked = new();
         public static Object botRespawnLocker = new();
         public static Object locked0 = new();
@@ -58,6 +59,7 @@
                         catch
                         {
                             usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
+                            sourceLink = Result["url"].ToString();
                         }
                         string PathToResult = Environment.CurrentDirectory + @"/Shitposs/" + usableName;
 
@@ -145,7 +147,25 @@
                                 throw new Exception("Restart Bot");
                             }
                         }
-                        else if (sourceLink == null || !sourceLink.Contains("v.redd.it") && !Result.Value<bool>("is_video"))
+                        else if (sourceLink != null && sourceLink.Contains("youtu.be") || sourceLink.Contains("youtube"))
+                        {
+                            if (!File.Exists(sourceLink + ".mp4"))
+                            {
+                                Console.WriteLine("Detected YouTube Video/Clip! Attempting Download!");
+                                //GET video with yt-dlp
+                                YouTubeDLP YTDLP = new();
+
+                                YTDLP.VideoLink = sourceLink;
+
+                                YTDLP.GetVideoAsMP4(PathToResult);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Video already exists! Restarting Bot");
+                                throw new Exception("Restart Bot");
+                            }
+                        }
+                        else if (sourceLink == null || !sourceLink.Contains("v.redd.it") || sourceLink.Contains("youtu.be") && !Result.Value<bool>("is_video"))
                         {
                             //Normal Execution
                             if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))

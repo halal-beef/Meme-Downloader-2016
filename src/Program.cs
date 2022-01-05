@@ -96,7 +96,18 @@
         }
         public static void Main()
         {
-            Directory.Delete(Environment.CurrentDirectory + @"/TEMP/", true);
+            if (Directory.Exists(Environment.CurrentDirectory + @"/TEMP/"))
+            {
+                ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
+                Directory.Delete(Environment.CurrentDirectory + @"/TEMP/", true);
+
+                Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
+            }
+            else
+            {
+                Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
+
+            }
 
             //GET Windows dependencies & Verify them
 
@@ -128,12 +139,6 @@
                     Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
                     GETWindowsDepedencies();
                 }
-            }
-
-            if (!Directory.Exists(Environment.CurrentDirectory + @"/TEMP/"))
-            {
-                //ffmpeg file processing depends on TEMP!
-                Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
             }
 
             Console.WriteLine("Loading Configurations...");
