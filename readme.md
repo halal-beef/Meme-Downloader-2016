@@ -31,3 +31,9 @@ Original Idea: [SmallPP420](https://github.com/SmallPP420)
 Thanks to: 
 
 TeNaihi for helping me test it :D
+
+
+
+## NOTES FOR FORKERS
+
+If you fork this repo you will need to add a repository secret named TEST with your github token as your valur if u want to use the github ci script to build
