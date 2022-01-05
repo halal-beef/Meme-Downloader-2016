@@ -2,35 +2,80 @@
 {
     public class Program
     {
+        /// <summary>
+        /// Verifies a MD5 Hash!
+        /// </summary>
+        /// <param name="Expectedsha256">The expected SHA-256 Hash in a string</param>
+        /// <param name="PathToFile">Path to the file to calculate the hash and compare</param>
+        /// <returns>true if the expected hash is the same as the one of the file; false if they are different</returns>
+        public static bool VerifyFileIntegrity(string Expectedsha256, string PathToFile) 
+        { 
+            SHA256 sHA256 = SHA256.Create();
+            try
+            {
+                using FileStream fs = File.OpenRead(PathToFile);
+                byte[] objectiveHash = sHA256.ComputeHash(fs);
+
+                string stringObjHash = BitConverter.ToString(objectiveHash).Replace("-", String.Empty);
+
+                Console.WriteLine($"Expected Hash: {Expectedsha256}; Result Hash: {stringObjHash}");
+
+                if (Expectedsha256 == stringObjHash)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static void GETWindowsDepedencies()
         {
-            Console.WriteLine("Getting Depedencies, please hold...");
 
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/"); 
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/Dependencies/");
 
-            Thread getFFMPEG = new(
-                () => 
-                        {
-                            string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
-                            using (FileStream fs0 = File.Create(FFMPEGZIPPATH))
-                            {
-                                HttpResponseMessage hrm0 = new HttpClient().GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip").GetAwaiter().GetResult();
-                                hrm0.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
-                            }
-                            ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
-                            File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe");
-                        }
-                );
+            Thread getFFMPEG = new(() => 
+                {
+                    string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
+                    using (FileStream fs0 = File.Create(FFMPEGZIPPATH))
+                    {
+                        HttpResponseMessage hrm4 = new HttpClient(handler: InternalProgramData.handler).GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip").GetAwaiter().GetResult();
+                        hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
+                    }
+                    ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
+                    File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", true);
+                });
+
+            Thread getYTDLP = new(() =>
+                {
+                    string YTDLPPATH = Environment.CurrentDirectory + @"/Dependencies/yt-dlp.exe";
+
+                    using FileStream fs0 = File.Create(YTDLPPATH);
+                    HttpResponseMessage hrm5 = new HttpClient(handler: InternalProgramData.handler).GetAsync("https://github.com/yt-dlp/yt-dlp/releases/download/2021.12.27/yt-dlp.exe").GetAwaiter().GetResult();
+                    hrm5.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
+
+                });
+
+            getYTDLP.Name = "Get yt-dlp from Github Build!";
+
             getFFMPEG.Name = "Get FFMPEG from Github Build!";
+            getYTDLP.Start();
             getFFMPEG.Start();
 
-            while (getFFMPEG.IsAlive)
+            Console.Write("Getting ffmpeg and YouTube-dlp");
+            while (getFFMPEG.IsAlive || getYTDLP.IsAlive)
             {
-                Thread.Sleep(5);
+                Console.Write('.');
+                Thread.Sleep(500);
             }
 
-            Console.WriteLine("Done! Restarting the program...");
+            Console.WriteLine("\nDone! Please restart the program to continue.");
             
             Thread startNewInstance = new(() => 
             {
@@ -51,12 +96,40 @@
         }
         public static void Main()
         {
-            //GET Windows dependencies...
+            Directory.Delete(Environment.CurrentDirectory + @"/TEMP/", true);
+
+            //GET Windows dependencies & Verify them
 
             if (!Directory.Exists(Environment.CurrentDirectory + @"/Dependencies/"))
             {
+                Console.WriteLine("Getting Depedencies, please hold...");
                 GETWindowsDepedencies();
             }
+            else 
+            {
+                Console.WriteLine("Verifying Install...");
+                try
+                {
+                    string
+                       ytdlpsha256 = "1A34F627CA88251BE6D17940F026F6A5B8AAAF0AA32DD60DEEC3020F81950E67",
+                       ffmpegsha256 = "D6DEEDD283FCCE95B3709C7FBF716419443E14209AD6866F3D14A78D1F077E39";
+
+                    bool ytdlpOK = VerifyFileIntegrity(ytdlpsha256, Environment.CurrentDirectory + @"/Dependencies/yt-dlp.exe");
+                    bool ffmpegOK = VerifyFileIntegrity(ffmpegsha256, Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe");
+     
+                    if (!ytdlpOK || !ffmpegOK)
+                    {
+                        Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
+                        GETWindowsDepedencies();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
+                    GETWindowsDepedencies();
+                }
+            }
+
             if (!Directory.Exists(Environment.CurrentDirectory + @"/TEMP/"))
             {
                 //ffmpeg file processing depends on TEMP!
