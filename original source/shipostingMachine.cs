@@ -13,7 +13,14 @@ namespace ShitpostingMachine {
 
             Console.WriteLine("Starting Hell!");
 
-            Thread[] threadArray = new {};
+            //Fixed small error
+            for (int i = 0; i < 8; i++)
+            {
+                Thread x = new(() => GetShitPost());
+                x.IsBackground = true;
+                x.Start();
+            }
+            Console.ReadKey();
         }
 
         public static void GetShitPost(){
@@ -23,10 +30,10 @@ namespace ShitpostingMachine {
 
                     new HttpClient()
 
-                    .GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1")
-                    
+                    .GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1").GetAwaiter().GetResult()
+
                     )[0]["data"]["children"][0]["data"]
-                    .ToString().GetAwaiter().GetResult();
+                    .ToString();
                 
                 );
             
