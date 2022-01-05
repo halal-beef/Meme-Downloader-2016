@@ -33,7 +33,7 @@ namespace ShitpostingMachine {
                     .GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1").GetAwaiter().GetResult()
 
                     )[0]["data"]["children"][0]["data"]
-                    .ToString();
+                    .ToString()
                 
                 );
             
