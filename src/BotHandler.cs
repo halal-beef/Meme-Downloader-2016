@@ -173,8 +173,16 @@
             {
                 if (!InternalProgramData.STOPPROGRAM)
                 {
+                    if(!ex.Message.Contains("Restart")) 
+                    {
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, Bots Left: {BotStatus.aliveBots.Count}");
+                    }
+                    else
+                    {
+
+                        Console.WriteLine($"Restarting {Thread.CurrentThread.Name}");
+                    }
                     BotStatus.aliveBots.RemoveAt(0);
-                    Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, Bots Left: {BotStatus.aliveBots.Count}");
                     CheckAndReviveBots();
                 }
                 else
