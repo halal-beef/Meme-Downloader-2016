@@ -6,6 +6,14 @@
     <RootNamespace>Meme_Downloader_2016</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+            <!--Fixes certain errors while compiling-->
+        <PublishTrimmed>false</PublishTrimmed>
+        
+                <!--Embed the .pdb file within the exe or dll, delete to disable-->
+        <DebugType>embedded</DebugType>
+
+        <PublishSingleFile>true</PublishSingleFile>
+        <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
