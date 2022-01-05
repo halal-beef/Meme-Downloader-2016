@@ -30,8 +30,23 @@
                 Thread.Sleep(5);
             }
 
-            Console.WriteLine("Done! Proceeding with execution in 5 seconds...");
-            Thread.Sleep(5000);
+            Console.WriteLine("Done! Restarting the program...");
+            
+            Thread startNewInstance = new(() => 
+            {
+                Process proc = new();
+                proc.StartInfo.FileName = Environment.ProcessPath;
+                proc.StartInfo.CreateNoWindow = false;
+                proc.StartInfo.UseShellExecute = true;
+                proc.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                proc.Start();
+            }
+            );
+            startNewInstance.IsBackground = false;
+            startNewInstance.Start();
+
+            Process proc = Process.GetCurrentProcess();
+            proc.Kill();
             Console.Clear();
         }
         public static void Main()
