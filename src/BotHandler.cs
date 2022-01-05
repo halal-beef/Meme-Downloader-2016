@@ -18,19 +18,20 @@
 
                 while (!InternalProgramData.STOPPROGRAM)
                 {
+                    string data = "";
+                    try
+                    {
+                        data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
+                    }
+                    finally
+                    {
+                        data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
+                    }
+
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         //Setup the request to use TLS 1.2
-                        string data = "";
-                        try
-                        {
-                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
-                        }
-                        finally
-                        {
-                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
-                        }
 
 
                         var Result = JObject.Parse(
@@ -38,20 +39,19 @@
                             JArray.Parse(data)[0]["data"]["children"][0]["data"].ToString()
 
                             );
-
-                        string usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
+                        string usableName = "", sourceLink = null;
+                        try
+                        {
+                            usableName = Result["url_overridden_by_dest"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
+                            sourceLink = Result.Value<string>("url_overridden_by_dest");
+                        }
+                        catch
+                        {
+                            usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
+                        }
                         string PathToResult = Environment.CurrentDirectory + @"/Shitposs/" + usableName;
 
-                        //Get Video if content is of that type.
-
-                        string sourceLink = Result.Value<string>("url_overridden_by_dest");
-
-                        //if (sourceLink == null)
-                        //{
-
-                        //}
-
-                        if (sourceLink != null && sourceLink.Contains("v.redd.it"))
+                        if (sourceLink != null && sourceLink.Contains("v.redd.it") && Result.Value<bool>("is_video"))
                         {
                             if (!File.Exists(PathToResult + ".mkv"))
                             {
@@ -67,9 +67,9 @@
                                 }
                                 catch
                                 {
-                                    
+
                                 }
-                                
+
                                 string AudioLink = sourceLink + "/DASH_audio.mp4";
 
                                 Console.WriteLine($"AUDIOLINK: {AudioLink}");
@@ -109,7 +109,7 @@
 
                                 while (encoder.IsAlive)
                                 {
-                                    Thread.Sleep(5);
+                                    Thread.Sleep(10000);
                                 }
 
                                 //Delete temp files!
@@ -122,7 +122,7 @@
                                 throw new Exception("Restart Bot");
                             }
                         }
-                        else if (sourceLink == null || !sourceLink.Contains("v.redd.it"))
+                        else if (sourceLink == null || !sourceLink.Contains("v.redd.it") && !Result.Value<bool>("is_video"))
                         {
                             //Normal Execution
                             if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
@@ -136,8 +136,16 @@
                                 using (FileStream fs = File.Create(PathToResult))
                                 {
                                     HttpClient httpClient = new(InternalProgramData.handler);
-
-                                    HttpResponseMessage hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
+                                    HttpResponseMessage hrm;
+                                    
+                                    try
+                                    {
+                                        hrm = httpClient.GetAsync(Result["url_overriden_by_dest"].ToString()).GetAwaiter().GetResult();
+                                    } 
+                                    catch
+                                    {
+                                        hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
+                                    }
 
                                     try
                                     {
@@ -148,6 +156,7 @@
                                         Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
                                         throw new Exception("Did you unplig the WiFi?");
                                     }
+
                                     hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
                                     fs.Dispose();
                                     fs.Close();
