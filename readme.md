@@ -2,10 +2,10 @@
 
 That name is just joking :)
 
-Dependencies (handled by the program by the most part):
+Dependencies (handled by the program):
 
   - ffmpeg
-  - ~~youtube-dlp~~ (soon)
+  - youtube-dlp
 
 This app downloads can download stuff from a subreddit of your choice and throws what it gets into a folder.
 
