@@ -4,7 +4,7 @@ That name is just joking :)
 
 This app downloads can download stuff from a subreddit of your choice and throws what it gets into a folder.
 
-This app runs 32 threads, and is (sometimes) VERY resource hungry on memory, some processes might stay as zombies, that means, they don't die, examples are ffmpeg, that can prevent you from deleting the program 
+This app runs 32 threads by default, and is (sometimes) VERY resource hungry on memory, some processes might stay as zombies, that means, they don't die, examples are ffmpeg, that can prevent you from deleting the program 
 
 How to make `config.josn`?
 
