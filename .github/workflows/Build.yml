@@ -18,4 +18,14 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
+      id: date
       run: chmod +x Build.sh && ./Build.sh
+   # - name: Upload to Release
+   #   uses: softprops/action-gh-release@v1
+   #   with:
+   #     files: |
+   #         /home/runner/work/SharpBoot/SharpBoot/SharpBoot/bin/Debug/net472/SharpBoot.dll
+   #     name: SharpBoot Release
+   #     tag_name: "${{ steps.date.outputs.today }}-Linux"
+   #   env:
+   #     GITHUB_TOKEN: ${{ secrets.TEST }}
