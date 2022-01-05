@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build
       id: date
-      run: chmod +x Build.sh && ./Build.sh
+      run: chmod +x Build.sh && ./Build.sh && echo "::set-output name=today::$(date +"%d-%m-%y")"
     - name: Upload Linux Release
       uses: softprops/action-gh-release@v1
       with:
