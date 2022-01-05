@@ -3,6 +3,7 @@
     internal class BotHandler
     {
         public static Object locked = new();
+        public static Object botRespawnLocker = new();
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
@@ -97,7 +98,8 @@
                             }
                             else
                             {
-                                Console.WriteLine("Video already exists! Skipping!");
+                                Console.WriteLine("Video already exists! Restarting Bot");
+                                throw new Exception("Restart Bot");
                             }
                         }
                         else if (!sourceLink.Contains("v.redd.it"))
@@ -125,13 +127,17 @@
                                     catch
                                     {
                                         Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
-                                        Environment.Exit(0);
+                                        throw new Exception("Did you unplig the WiFi?");
                                     }
                                     hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
                                     fs.Dispose();
                                     fs.Close();
                                 }
                                 Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
+                            }
+                            else
+                            {
+                                throw new Exception("Restart Bot");
                             }
                         }
                     }
@@ -154,28 +160,31 @@
         }
         public void CheckAndReviveBots()
         {
-            BotHandler botSys = new();
-
-            float totalBots = InternalProgramData.BotCount;
-            float aliveBots = BotStatus.aliveBots.Count;
-            
-            int deadBots = InternalProgramData.BotCount - (int)aliveBots;
-
-            float aliveBotsPercentage = aliveBots / totalBots * 100;
-
-            Console.WriteLine($"{aliveBotsPercentage}% of bots are alive! {deadBots} Bots have died!");
-            
-            if (float.Parse(aliveBotsPercentage.ToString()) <= 50)
+            lock (botRespawnLocker)
             {
-                for (float i = aliveBots; i < totalBots; i++)
+                BotHandler botSys = new();
+
+                float totalBots = InternalProgramData.BotCount;
+                float aliveBots = BotStatus.aliveBots.Count;
+
+                int deadBots = InternalProgramData.BotCount - (int)aliveBots;
+
+                float aliveBotsPercentage = aliveBots / totalBots * 100;
+
+                Console.WriteLine($"{aliveBotsPercentage}% of bots are alive! {deadBots} Bots have died!");
+
+                if (float.Parse(aliveBotsPercentage.ToString()) <= 50)
                 {
-                    //Download posts on 64 threads 🥶👌
-                    Thread x = new(() => botSys.StartBot((int)i * 2));
-                    x.Name = "Shitpost bot n" + i;
-                    x.IsBackground = true;
-                    x.Start();
+                    for (float i = aliveBots; i < totalBots; i++)
+                    {
+                        //Download posts on 64 threads 🥶👌
+                        Thread x = new(() => botSys.StartBot((int)i * 2));
+                        x.Name = "Shitpost bot n" + i;
+                        x.IsBackground = true;
+                        x.Start();
+                    }
+                    Console.WriteLine($"Created {deadBots} new bots, Total Remaining: {BotStatus.aliveBots.Count}");
                 }
-                Console.WriteLine($"Created {deadBots} new bots, Total Remaining: {BotStatus.aliveBots.Count}");
             }
         }
     }
