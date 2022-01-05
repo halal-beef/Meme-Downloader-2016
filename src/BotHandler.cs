@@ -6,7 +6,6 @@
         public static Object botRespawnLocker = new();
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-
         public void StartBot(int timeOut = 50)
         {
             try
@@ -21,10 +20,26 @@
                 {
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
-                        string data = new HttpClient().GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1").GetAwaiter().GetResult();
+                        //Setup the request to use TLS 1.2
+                        HttpClientHandler handler = new()
+                        {
+                            SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+                            UseCookies = true,
+                            AutomaticDecompression = DecompressionMethods.All
+                        };
+
+                    string data = "";
+                        try
+                        {
+                            data = new HttpClient(handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
+                        }
+                        finally
+                        {
+                            data = new HttpClient(handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
+                        }
 
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
-                        
+
                         var Result = JObject.Parse(
 
                             JArray.Parse(data)[0]["data"]["children"][0]["data"].ToString()
@@ -38,7 +53,12 @@
 
                         string sourceLink = Result.Value<string>("url_overridden_by_dest");
 
-                        if (sourceLink.Contains("v.redd.it"))
+                        //if (sourceLink == null)
+                        //{
+
+                        //}
+
+                        if (sourceLink != null && sourceLink.Contains("v.redd.it"))
                         {
                             if (!File.Exists(PathToResult + ".mkv"))
                             {
@@ -47,9 +67,16 @@
                                 JArray.Parse(data)[0]["data"]["children"][0]["data"]["secure_media"]["reddit_video"].ToString()
 
                                 );
-
-
-                                string VideoLink = result0.Value<string>("fallback_url").Split('?')[0];
+                                string VideoLink = "";
+                                try
+                                {
+                                    VideoLink = result0.Value<string>("fallback_url");
+                                }
+                                catch
+                                {
+                                    
+                                }
+                                
                                 string AudioLink = sourceLink + "/DASH_audio.mp4";
 
                                 Console.WriteLine($"AUDIOLINK: {AudioLink}");
@@ -102,7 +129,7 @@
                                 throw new Exception("Restart Bot");
                             }
                         }
-                        else if (!sourceLink.Contains("v.redd.it"))
+                        else if (sourceLink == null || !sourceLink.Contains("v.redd.it"))
                         {
                             //Normal Execution
 
@@ -137,54 +164,61 @@
                             }
                             else
                             {
-                                throw new Exception("Restart Bot");
+                                Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" Already Downloaded!!!!");
                             }
                         }
                     }
                     else
                     {
-                        Thread.Sleep(5050);
+                        Thread.Sleep(200);
                     }
                 }
                 BotStatus.aliveBots.RemoveAt(0);
             }
-            catch
+            catch (Exception ex)
             {
                 if (!InternalProgramData.STOPPROGRAM)
                 {
                     BotStatus.aliveBots.RemoveAt(0);
-                    Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated, Bots Left: {BotStatus.aliveBots.Count}");
+                    Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, Bots Left: {BotStatus.aliveBots.Count}");
                     CheckAndReviveBots();
+                }
+                else
+                {
+                    Console.WriteLine($"Bot {Thread.CurrentThread.Name} finished downloading last post.");
                 }
             }
         }
         public void CheckAndReviveBots()
         {
-            lock (botRespawnLocker)
-            {
-                BotHandler botSys = new();
+            if (!InternalProgramData.STOPPROGRAM) {
 
-                float totalBots = InternalProgramData.BotCount;
-                float aliveBots = BotStatus.aliveBots.Count;
-
-                int deadBots = InternalProgramData.BotCount - (int)aliveBots;
-
-                float aliveBotsPercentage = aliveBots / totalBots * 100;
-
-                Console.WriteLine($"{aliveBotsPercentage}% of bots are alive! {deadBots} Bots have died!");
-
-                if (float.Parse(aliveBotsPercentage.ToString()) <= 50)
+                lock (botRespawnLocker)
                 {
-                    for (float i = aliveBots; i < totalBots; i++)
+                    BotHandler botSys = new();
+
+                    float totalBots = InternalProgramData.BotCount;
+                    float aliveBots = BotStatus.aliveBots.Count;
+
+                    int deadBots = InternalProgramData.BotCount - (int)aliveBots;
+
+                    float aliveBotsPercentage = aliveBots / totalBots * 100;
+
+                    Console.WriteLine($"{aliveBotsPercentage}% of bots are alive! {deadBots} Bots have died!");
+
+                    if (float.Parse(aliveBotsPercentage.ToString()) <= 50)
                     {
-                        //Download posts on 64 threads 🥶👌
-                        Thread x = new(() => botSys.StartBot((int)i * 2));
-                        x.Name = "Shitpost bot n" + i;
-                        x.IsBackground = true;
-                        x.Start();
+                        for (float i = aliveBots; i < totalBots; i++)
+                        {
+                            //Download posts on 64 threads 🥶👌
+                            Thread x = new(() => botSys.StartBot((int)i * 2));
+                            x.Name = $"{InternalProgramData.TargetSubReddit} bot n" + i;
+                            x.IsBackground = true;
+                            x.Start();
+                        }
+                        Console.WriteLine($"Created {deadBots} new bots, Total Remaining: {BotStatus.aliveBots.Count}");
                     }
-                    Console.WriteLine($"Created {deadBots} new bots, Total Remaining: {BotStatus.aliveBots.Count}");
-                }
+                } 
             }
         }
     }

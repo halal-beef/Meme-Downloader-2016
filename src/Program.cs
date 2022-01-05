@@ -48,6 +48,36 @@
                 Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
             }
             BotHandler botSys = new();
+
+            Console.WriteLine("Loading Configurations...");
+
+            if (!File.Exists(Environment.CurrentDirectory + @"\config.json"))
+            {
+                Console.WriteLine("Configuration file does not exist, using default configuration and creating one...");
+                ConfigurationManager.CreateConfigs();
+            }
+            else
+            {
+                ConfigurationManager.ApplyConfigs(ConfigurationManager.LoadConfigs());
+            }
+
+            Console.WriteLine(
+
+                    "Configurations applied:\n" +
+                    "\n" +
+                
+                    $"Threads: {InternalProgramData.BotCount}\n" +
+                   
+                    $"Target Subreddit: {InternalProgramData.TargetSubReddit}\n" +
+                    
+                    "\n" +
+                    "" +
+                    "" +
+                    "" +
+                    "" +
+                    "" +
+                    ""  );
+
             Console.WriteLine("Preparing Environment...");
 
             string newPath = Environment.GetEnvironmentVariable("PATH") + ';' + Environment.CurrentDirectory + @"/Dependencies/;";
@@ -62,7 +92,7 @@
             {
                 //Execute bots according to the ammount specified on BotCount 🥶👌
                 Thread x = new(() => botSys.StartBot(i * 2));
-                x.Name = "Shitpost bot n" + i;
+                x.Name = $"{InternalProgramData.TargetSubReddit} bot n" + i;
                 x.IsBackground = true;
                 x.Start();
             }

@@ -2,9 +2,22 @@
 
 That name is just joking :)
 
-This app downloads can download stuff from a subreddit of your choice(feature pending) and throws what it gets into a folder.
+This app downloads can download stuff from a subreddit of your choice and throws what it gets into a folder.
 
-This app runs 64 threads, and is (sometimes) VERY resource hungry on memory, some processes might stay as zombies, that means, they don't die, examples are ffmpeg, that can prevent you from deleting the program 
+This app runs 32 threads, and is (sometimes) VERY resource hungry on memory, some processes might stay as zombies, that means, they don't die, examples are ffmpeg, that can prevent you from deleting the program 
+
+How to make `config.josn`?
+
+This is the default config.json configuration:
+
+```
+{
+	"TargetSubreddit": "shitposting",
+	"ThreadCount": 32
+}
+```
+**TargetSubreddit**: This is the subreddit from where you want to get posts from
+**ThreadCount**: This is how many bots will run simultaneously, going over 32 is normally overkill
 
 
 ------------------
