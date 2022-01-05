@@ -18,7 +18,8 @@
     }
     internal struct BotStatus
     {
-        public static List<bool> aliveBots = new();
+        public static List<bool> aliveBots0 = new();
+        public static List<bool> aliveBots1 = new();
     }
     internal struct Configurations 
     {

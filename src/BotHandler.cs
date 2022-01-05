@@ -4,15 +4,26 @@
     {
         public static Object locked = new();
         public static Object botRespawnLocker = new();
+        public static Object locked0 = new();
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         public static void StartBot(string Target, int timeOut = 50)
         {
+            bool isBot0 = false;
             try
             {
-                lock (locked)
-                {  
-                    BotStatus.aliveBots.Add(true);
+                if (Target == InternalProgramData.TargetSubReddit0) {
+                    isBot0 = true;
+                    lock (locked)
+                    {
+                        BotStatus.aliveBots0.Add(true);
+                    }
+                } else if (Target == InternalProgramData.TargetSubReddit1) 
+                {
+                    lock (locked0)
+                    {
+                        BotStatus.aliveBots1.Add(true);
+                    } 
                 }
                 Random rand = new();
 
@@ -195,22 +206,29 @@
                         Thread.Sleep(200);
                     }
                 }
-                BotStatus.aliveBots.RemoveAt(0);
+                if (isBot0) {
+                    BotStatus.aliveBots0.RemoveAt(0);
+                } else
+                {
+                    BotStatus.aliveBots1.RemoveAt(0);
+                }
             }
             catch (Exception ex)
             {
                 if (!InternalProgramData.STOPPROGRAM)
                 {
-                    if(!ex.Message.Contains("Restart")) 
+                    if(!ex.Message.Contains("Restart") && isBot0) 
                     {
-                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, Bots Left: {BotStatus.aliveBots.Count}");
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, bots {Target} Left: {BotStatus.aliveBots0.Count}");
+                    }
+                    else if(!ex.Message.Contains("Restart") && !isBot0)
+                    {
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, bots {Target} Left: {BotStatus.aliveBots1.Count}");
                     }
                     else
                     {
-
                         Console.WriteLine($"Restarting {Thread.CurrentThread.Name}");
                     }
-                    BotStatus.aliveBots.RemoveAt(0);
                     CheckAndReviveBots();
                 }
                 else
@@ -225,48 +243,68 @@
 
                 lock (botRespawnLocker)
                 {
-                    float totalBots = InternalProgramData.BotCount;
-                    float aliveBots = BotStatus.aliveBots.Count;
+                    float totalBots = InternalProgramData.BotCount,
+                          aliveBots0 = BotStatus.aliveBots0.Count,
+                          aliveBots1 = BotStatus.aliveBots1.Count;
 
-                    int deadBots = InternalProgramData.BotCount - (int)aliveBots;
+                    float aliveBotsPercentage0 = aliveBots0 / totalBots * 100,
+                          aliveBotsPercentage1 = aliveBots1 / totalBots * 100;
 
-                    float aliveBotsPercentage = aliveBots / totalBots * 100;
+                    Console.WriteLine($"{aliveBotsPercentage0}% of bots for Target0 are alive!");
+                    Console.WriteLine($"{aliveBotsPercentage1}% of bots for Target1 are alive!");
 
-                    Console.WriteLine($"{aliveBotsPercentage}% of bots are alive! {deadBots} Bots have died!");
 
-                    if (float.Parse(aliveBotsPercentage.ToString()) <= 50)
+                    if(aliveBotsPercentage0 <= 50 && aliveBotsPercentage1 <= 50)
                     {
-                        if (InternalProgramData.SimultaneousDownload)
+                        float amountToRevive0 = totalBots - aliveBots0;
+                        for (float i = amountToRevive0; i < totalBots / 2 / 2; i++)
                         {
+                            //Execute bots according to the ammount specified on BotCount 🥶👌
+                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
+                            x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                            x.IsBackground = true;
+                            x.Start();
+                        }
+                        float amountToRevive = totalBots - aliveBots1;
+                        for (float i = amountToRevive; i < totalBots / 2; i++)
+                        {
+                            //Execute bots according to the ammount specified on BotCount 🥶👌
+                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, (int)i * 2));
+                            x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
+                            x.IsBackground = true;
+                            x.Start();
+                        }
 
-                            for (float i = aliveBots; i < totalBots / 2; i++)
-                            {
-                                //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
-                                x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
-                                x.IsBackground = true;
-                                x.Start();
-                            }
-                            for (float i = aliveBots; i < totalBots / 2; i++)
-                            {
-                                //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, (int)i * 2));
-                                x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
-                                x.IsBackground = true;
-                                x.Start();
-                            }
-                        }
-                        else
+                        Console.WriteLine($"Revived bots, Total for Target0 {BotStatus.aliveBots0.Count}");
+                        Console.WriteLine($"Revived bots, Total for Target1 {BotStatus.aliveBots1.Count}");
+                    }
+                    else if (aliveBotsPercentage0 <= 50)
+                    {
+                        float amountToRevive = totalBots - aliveBots0;
+                        for (float i = amountToRevive; i < totalBots / 2; i++)
                         {
-                            for (float i = aliveBots; i < totalBots / 2; i++)
-                            {
-                                //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
-                                x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
-                                x.IsBackground = true;
-                                x.Start();
-                            }
+                            //Execute bots according to the ammount specified on BotCount 🥶👌
+                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
+                            x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                            x.IsBackground = true;
+                            x.Start();
                         }
+                        Console.WriteLine($"Revived bots, Total for Target0 {BotStatus.aliveBots0.Count}");
+                    }
+                    else if (aliveBotsPercentage1 <= 50)
+                    {
+                        float amountToRevive = totalBots - aliveBots1;
+                        for (float i = amountToRevive; i < totalBots / 2; i++)
+                        {
+                            //Execute bots according to the ammount specified on BotCount 🥶👌
+                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, (int)i * 2));
+                            x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
+                            x.IsBackground = true;
+                            x.Start();
+                        }
+                        Console.WriteLine($"Revived bots, Total for Target1 {BotStatus.aliveBots1.Count}");
+                        Console.WriteLine($"Current Total Bot Count: {BotStatus.aliveBots0.Count + BotStatus.aliveBots1.Count}");
+
                     }
                 }
             }
