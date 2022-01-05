@@ -53,7 +53,7 @@
             if (!File.Exists(Environment.CurrentDirectory + @"\config.json"))
             {
                 Console.WriteLine("Configuration file does not exist, using default configuration and creating one...");
-                ConfigurationManager.CreateConfigs();
+                ConfigurationManager.CreateConfigs(new Configurations());
             }
             else
             {
@@ -67,9 +67,9 @@
                 
                     $"Threads: {InternalProgramData.BotCount}\n" +
                    
-                    $"Target Subreddit: {InternalProgramData.TargetSubReddit}\n" +
+                    $"Target Subreddit (n1): {InternalProgramData.TargetSubReddit0}\n" +
                     
-                    "\n" +
+                    $"Target Subreddit (n2): {InternalProgramData.TargetSubReddit1}\n" +
                     "" +
                     "" +
                     "" +
@@ -87,13 +87,34 @@
 
             Console.WriteLine("Starting Hell!");
 
-            for (int i = 0; i < InternalProgramData.BotCount; i++)
+            if (InternalProgramData.SimultaneousDownload) {
+
+                for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
+                {
+                    //Execute bots according to the ammount specified on BotCount 🥶👌
+                    Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, i * 2));
+                    x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                    x.IsBackground = true;
+                    x.Start();
+                }
+                for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
+                {
+                    //Execute bots according to the ammount specified on BotCount 🥶👌
+                    Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, i * 2));
+                    x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
+                    x.IsBackground = true;
+                    x.Start();
+                }
+            } else
             {
-                //Execute bots according to the ammount specified on BotCount 🥶👌
-                Thread x = new(() => BotHandler.StartBot(i * 2));
-                x.Name = $"{InternalProgramData.TargetSubReddit} bot n" + i;
-                x.IsBackground = true;
-                x.Start();
+                for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
+                {
+                    //Execute bots according to the ammount specified on BotCount 🥶👌
+                    Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, i * 2));
+                    x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                    x.IsBackground = true;
+                    x.Start();
+                }
             }
 
 

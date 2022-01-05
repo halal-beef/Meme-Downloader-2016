@@ -11,9 +11,8 @@
 
             return deserialized;
         }
-        public static void CreateConfigs()
+        public static void CreateConfigs(Configurations configs)
         {
-            Configurations configs = new();
             string Path0 = Environment.CurrentDirectory + @"\config.json";
 
             string defaultConfigs = JsonConvert.SerializeObject(configs);
@@ -24,7 +23,9 @@
         public static void ApplyConfigs(Configurations configs)
         {
             InternalProgramData.BotCount = configs.ThreadCount;
-            InternalProgramData.TargetSubReddit = configs.TargetSubreddit;
+            InternalProgramData.TargetSubReddit0 = configs.TargetSubReddit0;
+            InternalProgramData.TargetSubReddit1 = configs.TargetSubReddit1;
+            InternalProgramData.SimultaneousDownload = configs.SimultaneousDownload;
         }
     }
 }

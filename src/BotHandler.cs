@@ -6,7 +6,7 @@
         public static Object botRespawnLocker = new();
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        public static void StartBot(int timeOut = 50)
+        public static void StartBot(string Target, int timeOut = 50)
         {
             try
             {
@@ -25,11 +25,11 @@
                         string data = "";
                         try
                         {
-                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
+                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
                         }
                         catch
                         {
-                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
+                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
                         }
 
 
@@ -236,17 +236,39 @@
 
                     if (float.Parse(aliveBotsPercentage.ToString()) <= 50)
                     {
-                        for (float i = aliveBots; i < totalBots; i++)
+                        if (InternalProgramData.SimultaneousDownload)
                         {
-                            //Download posts on 64 threads 🥶👌
-                            Thread x = new(() => StartBot((int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit} bot n" + i;
-                            x.IsBackground = true;
-                            x.Start();
+
+                            for (float i = aliveBots; i < totalBots / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
+                                x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                                x.IsBackground = true;
+                                x.Start();
+                            }
+                            for (float i = aliveBots; i < totalBots / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, (int)i * 2));
+                                x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
+                                x.IsBackground = true;
+                                x.Start();
+                            }
                         }
-                        Console.WriteLine($"Created {deadBots} new bots, Total Remaining: {BotStatus.aliveBots.Count}");
+                        else
+                        {
+                            for (float i = aliveBots; i < totalBots / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
+                                x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                                x.IsBackground = true;
+                                x.Start();
+                            }
+                        }
                     }
-                } 
+                }
             }
         }
     }

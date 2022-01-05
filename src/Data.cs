@@ -3,7 +3,9 @@
     internal struct InternalProgramData
     {
         public static int BotCount = 32;
-        public static string TargetSubReddit = "";
+        public static string TargetSubReddit0 = "";
+        public static string TargetSubReddit1 = "";
+        public static bool SimultaneousDownload = false;
         public static bool STOPPROGRAM = false;
         //public static CookieContainer CookieContainer = new();
 
@@ -20,7 +22,9 @@
     }
     internal struct Configurations 
     {
-        public string TargetSubreddit = "shitposting";
+        public string TargetSubReddit0 = "shitposting";
+        public string TargetSubReddit1 = "dankmemes";
+        public bool SimultaneousDownload = true;
         public int ThreadCount = 32;
     }
 }
