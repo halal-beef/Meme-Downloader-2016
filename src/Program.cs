@@ -48,6 +48,11 @@
                 Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
             }
             BotHandler botSys = new();
+            Console.WriteLine("Preparing Environment...");
+
+            string newPath = Environment.GetEnvironmentVariable("PATH") + ';' + Environment.CurrentDirectory + @"/Dependencies/;";
+            Environment.SetEnvironmentVariable("PATH", newPath);
+
             Console.WriteLine("Making Dirs...");
             Directory.CreateDirectory("Shitposs");
 
@@ -63,7 +68,7 @@
             }
 
 
-            new Thread(() => OptimizeMemory.CallGC()).Start();
+            new Thread(() => OptimizeMemory.CallGC(1024)).Start();
 
             Console.ReadKey();
             Console.Clear();

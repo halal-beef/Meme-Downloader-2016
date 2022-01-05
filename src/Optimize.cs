@@ -3,7 +3,11 @@
     internal class OptimizeMemory
     {
         public static bool collectionOnProgress = false;
-        public static void CallGC()
+        /// <summary>
+        /// Triggers a Garbage Collection
+        /// </summary>
+        /// <param name="RamLimit">The RAM on Megabytes that the program needs to consume to trigger the Garbage Collector!</param>
+        public static void CallGC(int RamLimit)
         {
             while (!InternalProgramData.STOPPROGRAM)
             {
@@ -11,7 +15,7 @@
                 bool shouldCollect = false;
 
                 //Calls GC when memory is more than 1024MB
-                if (pro.WorkingSet64 >= 1024000000)
+                if (pro.WorkingSet64 >= RamLimit * 1000000)
                 {
                     shouldCollect = true;
                 }

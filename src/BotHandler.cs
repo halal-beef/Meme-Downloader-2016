@@ -81,7 +81,6 @@
                                 Thread encoder = new(
                                     () =>
                                 MergeAudioAndVideo.UseFFMPEG(
-                                    Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe",
                                     Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4",
                                     Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult));
                                 encoder.IsBackground = true;

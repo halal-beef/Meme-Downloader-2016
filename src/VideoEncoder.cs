@@ -2,12 +2,12 @@
 { 
     internal class MergeAudioAndVideo
     {
-        public static void UseFFMPEG(string pathToFFMPEG, string PathToAudio, string PathToVideo, string FinalFilePath)
+        public static void UseFFMPEG(string PathToAudio, string PathToVideo, string FinalFilePath)
         {
             Process proc = new();
             ProcessStartInfo startInfo = new();
 
-            startInfo.FileName = pathToFFMPEG;
+            startInfo.FileName = "ffmpeg.exe";
             startInfo.Arguments = $" -i \"{PathToVideo}\" -i \"{PathToAudio}\" -c copy \"{FinalFilePath}.mkv\"";
 
             startInfo.CreateNoWindow = true;
