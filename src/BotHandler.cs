@@ -119,8 +119,8 @@
                                 }
                                 catch
                                 {
-                                    //Sleep for 10 seconds and try again
-                                    Thread.Sleep(10000);
+                                    //Sleep for 20 seconds and try again
+                                    Thread.Sleep(20000);
                                 }
                                 finally
                                 {
