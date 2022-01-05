@@ -158,8 +158,7 @@
                             {
                                 try
                                 {
-                                    using (FileStream fs = File.Create(PathToResult))
-                                    {
+                                    using FileStream fs = File.Create(PathToResult);
                                         HttpClient httpClient = new(InternalProgramData.handler);
                                         HttpResponseMessage hrm;
 
@@ -185,7 +184,7 @@
                                         hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
                                         fs.Dispose();
                                         fs.Close();
-                                    }
+                                    
                                 }
                                 catch
                                 {

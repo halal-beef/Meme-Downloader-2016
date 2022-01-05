@@ -5,6 +5,8 @@ using System.Net;
 namespace ShitpostingMachine {
 
     #pragma warning disable CS8602 // Dereference of a possibly null reference.
+    #pragma warning disable SYSLIB0014 // Type or member is obsolete
+
     public class Program
     {
         public static void Main0(){
@@ -37,7 +39,7 @@ namespace ShitpostingMachine {
                     .ToString()
                 
                 );
-            
+
             new WebClient().DownloadFile
             (
                 Result["url"].ToString(), "poopout/" + Path.GetFileName(new Uri(Result["url"].ToString()).LocalPath)
