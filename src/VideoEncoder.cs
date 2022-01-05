@@ -8,7 +8,7 @@
             ProcessStartInfo startInfo = new();
 
             startInfo.FileName = "ffmpeg.exe";
-            startInfo.Arguments = $" -i \"{PathToVideo}\" -i \"{PathToAudio}\" -c copy \"{FinalFilePath}.mkv\"";
+            startInfo.Arguments = $" -i \"{PathToVideo}\" -i \"{PathToAudio}\" -c copy \"{FinalFilePath}.mp4\"";
 
             startInfo.CreateNoWindow = true;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -16,7 +16,6 @@
             proc.StartInfo = startInfo;
             proc.Start();
             int pid = proc.Id;
-            Console.WriteLine(pid);
             
             new Thread(() =>
             {

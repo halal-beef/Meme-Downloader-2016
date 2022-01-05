@@ -58,6 +58,8 @@
 
             info.FileName = "taskkill";
             info.Arguments = $" /f /pid {PID}";
+            info.CreateNoWindow = true;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
 
             proc.StartInfo = info;
 
