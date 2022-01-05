@@ -1,4 +1,4 @@
-name: .NET
+name: Build MemeDownloader2016 For Linux And Windows
 
 on:
   push:
@@ -16,6 +16,6 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0
     - name: Build
       run: chmod +x Build.sh && ./Build.sh
