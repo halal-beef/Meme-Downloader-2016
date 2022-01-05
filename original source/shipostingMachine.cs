@@ -4,9 +4,10 @@ using System.Net;
 
 namespace ShitpostingMachine {
 
+    #pragma warning disable CS8602 // Dereference of a possibly null reference.
     public class Program
     {
-        public void Main(){
+        public static void Main0(){
 
             Console.WriteLine("Making Dirs...");
             Directory.CreateDirectory("Shitposs");

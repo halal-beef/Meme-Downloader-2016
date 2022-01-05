@@ -2,8 +2,10 @@
 {
     internal class BotHandler
     {
-        public static Object locked = new Object();
+        public static Object locked = new();
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
+        #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+
         public void StartBot(int timeOut = 50)
         {
             try
@@ -16,7 +18,7 @@
 
                 while (!InternalProgramData.STOPPROGRAM)
                 {
-                    if (!OptimizeMemory.collectionOnProgress)
+                    if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
                         string data = new HttpClient().GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1").GetAwaiter().GetResult();
 
@@ -37,62 +39,69 @@
 
                         if (sourceLink.Contains("v.redd.it"))
                         {
-                            var result0 = JObject.Parse(
+                            if (!File.Exists(PathToResult + ".mkv"))
+                            {
+                                var result0 = JObject.Parse(
 
                                 JArray.Parse(data)[0]["data"]["children"][0]["data"]["secure_media"]["reddit_video"].ToString()
 
                                 );
 
 
-                            string VideoLink = result0.Value<string>("fallback_url").Split('?')[0];
-                            string AudioLink = sourceLink + "/DASH_audio.mp4";
+                                string VideoLink = result0.Value<string>("fallback_url").Split('?')[0];
+                                string AudioLink = sourceLink + "/DASH_audio.mp4";
 
-                            Console.WriteLine($"AUDIOLINK: {AudioLink}");
-                            Console.WriteLine($"VIDEOLINK: {VideoLink}");
-                            HttpClient client = new();
+                                Console.WriteLine($"AUDIOLINK: {AudioLink}");
+                                Console.WriteLine($"VIDEOLINK: {VideoLink}");
+                                HttpClient client = new();
 
-                            HttpResponseMessage hrm0 = client.GetAsync(AudioLink).GetAwaiter().GetResult();
-                            HttpResponseMessage hrm1 = client.GetAsync(VideoLink).GetAwaiter().GetResult();
+                                HttpResponseMessage hrm0 = client.GetAsync(AudioLink).GetAwaiter().GetResult();
+                                HttpResponseMessage hrm1 = client.GetAsync(VideoLink).GetAwaiter().GetResult();
 
-                            try
-                            {
-                                hrm0.EnsureSuccessStatusCode();
+                                try
+                                {
+                                    hrm0.EnsureSuccessStatusCode();
 
-                                hrm1.EnsureSuccessStatusCode();
+                                    hrm1.EnsureSuccessStatusCode();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"{Thread.CurrentThread.Name}; Detected reddit video, but failed to get it. {ex.Message}");
+                                }
+
+                                using (FileStream fs = File.Create(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4"))
+                                {
+                                    hrm0.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                                }
+                                using (FileStream fs = File.Create(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4"))
+                                {
+                                    hrm1.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                                }
+
+                                Thread encoder = new(
+                                    () =>
+                                MergeAudioAndVideo.UseFFMPEG(
+                                    Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe",
+                                    Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4",
+                                    Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult));
+                                encoder.IsBackground = true;
+                                encoder.Start();
+
+                                while (encoder.IsAlive)
+                                {
+                                    Thread.Sleep(5);
+                                }
+
+                                //Delete temp files!
+                                File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
+                                File.Delete(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4");
                             }
-                            catch(Exception ex)
+                            else
                             {
-                                Console.WriteLine($"{Thread.CurrentThread.Name}; Detected reddit video, but failed to get it. {ex.Message}");
+                                Console.WriteLine("Video already exists! Skipping!");
                             }
-
-                            using (FileStream fs = File.Create(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4"))
-                            {
-                                hrm0.Content.CopyToAsync(fs).GetAwaiter().GetResult();
-                            }
-                            using (FileStream fs = File.Create(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4"))
-                            {
-                                hrm1.Content.CopyToAsync(fs).GetAwaiter().GetResult();
-                            }
-                            Thread encoder = new(
-                                () => 
-                            MergeAudioAndVideo.UseFFMPEG(
-                                Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", 
-                                Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4", 
-                                Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult));
-                            encoder.IsBackground = true;
-                            encoder.Start();
-
-                            while (encoder.IsAlive)
-                            {
-                                Thread.Sleep(5);
-                            }
-
-                            //Delete temp files!
-                            File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
-                            File.Delete(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4");
-
                         }
-                        else
+                        else if (!sourceLink.Contains("v.redd.it"))
                         {
                             //Normal Execution
 
@@ -144,14 +153,6 @@
                 }
             }
         }
-        
-        //Making a Reddit Video Grabber :D
-        public static void RedditVideoBot(string uri)
-        {
-
-
-        }
-
         public void CheckAndReviveBots()
         {
             BotHandler botSys = new();
@@ -175,7 +176,7 @@
                     x.IsBackground = true;
                     x.Start();
                 }
-                Console.WriteLine($"Created {deadBots} bots, Total Remaining: {BotStatus.aliveBots.Count}");
+                Console.WriteLine($"Created {deadBots} new bots, Total Remaining: {BotStatus.aliveBots.Count}");
             }
         }
     }

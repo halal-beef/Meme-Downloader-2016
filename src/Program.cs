@@ -9,7 +9,7 @@
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/"); 
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/Dependencies/");
 
-            Thread getFFMPEG = new Thread(
+            Thread getFFMPEG = new(
                 () => 
                         {
                             string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
@@ -42,7 +42,11 @@
             {
                 GETWindowsDepedencies();
             }
-            
+            if (!Directory.Exists(Environment.CurrentDirectory + @"/TEMP/"))
+            {
+                //ffmpeg file processing depends on TEMP!
+                Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
+            }
             BotHandler botSys = new();
             Console.WriteLine("Making Dirs...");
             Directory.CreateDirectory("Shitposs");
@@ -65,6 +69,9 @@
             Console.Clear();
 
             InternalProgramData.STOPPROGRAM = true;
+
+            //Kill Orphan ffmpeg processes
+            ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
             Thread.Sleep(10000);
         }
     }
