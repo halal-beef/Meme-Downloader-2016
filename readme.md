@@ -28,6 +28,11 @@ This is the default `config.json` configuration:
 **TargetSubreddit**: This is the subreddit from where you want to get posts from <br>
 **ThreadCount**: This is how many bots will run simultaneously, going over 32 is normally overkill
 
+------------------
+
+### **NOTES**:
+
+ - After downloading dependencies the program will fail to run the bots, close and open again the program for it to work as intended
 
 ------------------
 
