@@ -6,7 +6,7 @@
         public static Object botRespawnLocker = new();
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        public void StartBot(int timeOut = 50)
+        public static void StartBot(int timeOut = 50)
         {
             try
             {
@@ -18,20 +18,19 @@
 
                 while (!InternalProgramData.STOPPROGRAM)
                 {
-                    string data = "";
-                    try
-                    {
-                        data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
-                    }
-                    finally
-                    {
-                        data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
-                    }
-
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
-                        //Setup the request to use TLS 1.2
+
+                        string data = "";
+                        try
+                        {
+                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
+                        }
+                        catch
+                        {
+                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json").GetAwaiter().GetResult();
+                        }
 
 
                         var Result = JObject.Parse(
@@ -113,8 +112,21 @@
                                 }
 
                                 //Delete temp files!
-                                File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
-                                File.Delete(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4");
+                                try
+                                {
+                                    File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
+                                    File.Delete(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4");
+                                }
+                                catch
+                                {
+                                    //Sleep for 10 seconds and try again
+                                    Thread.Sleep(10000);
+                                }
+                                finally
+                                {
+                                    File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
+                                    File.Delete(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4");
+                                }
                             }
                             else
                             {
@@ -133,39 +145,46 @@
 
                             if (!File.Exists(PathToResult))
                             {
-                                using (FileStream fs = File.Create(PathToResult))
+                                try
                                 {
-                                    HttpClient httpClient = new(InternalProgramData.handler);
-                                    HttpResponseMessage hrm;
-                                    
-                                    try
+                                    using (FileStream fs = File.Create(PathToResult))
                                     {
-                                        hrm = httpClient.GetAsync(Result["url_overriden_by_dest"].ToString()).GetAwaiter().GetResult();
-                                    } 
-                                    catch
-                                    {
-                                        hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
-                                    }
+                                        HttpClient httpClient = new(InternalProgramData.handler);
+                                        HttpResponseMessage hrm;
 
-                                    try
-                                    {
-                                        hrm.EnsureSuccessStatusCode();
-                                    }
-                                    catch
-                                    {
-                                        Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
-                                        throw new Exception("Did you unplig the WiFi?");
-                                    }
+                                        try
+                                        {
+                                            hrm = httpClient.GetAsync(Result["url_overriden_by_dest"].ToString()).GetAwaiter().GetResult();
+                                        }
+                                        catch
+                                        {
+                                            hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
+                                        }
 
-                                    hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
-                                    fs.Dispose();
-                                    fs.Close();
+                                        try
+                                        {
+                                            hrm.EnsureSuccessStatusCode();
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
+                                            throw new Exception("Did you unplig the WiFi?");
+                                        }
+
+                                        hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                                        fs.Dispose();
+                                        fs.Close();
+                                    }
+                                }
+                                catch
+                                {
+                                    Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" is been already downloaded by another bot already!");
                                 }
                                 Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
                             }
                             else
                             {
-                                Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" Already Downloaded!!!!");
+                                Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" Already Downloaded!");
                             }
                         }
                         //Add a time out after downloading.
@@ -200,14 +219,12 @@
                 }
             }
         }
-        public void CheckAndReviveBots()
+        public static void CheckAndReviveBots()
         {
             if (!InternalProgramData.STOPPROGRAM) {
 
                 lock (botRespawnLocker)
                 {
-                    BotHandler botSys = new();
-
                     float totalBots = InternalProgramData.BotCount;
                     float aliveBots = BotStatus.aliveBots.Count;
 
@@ -222,7 +239,7 @@
                         for (float i = aliveBots; i < totalBots; i++)
                         {
                             //Download posts on 64 threads 🥶👌
-                            Thread x = new(() => botSys.StartBot((int)i * 2));
+                            Thread x = new(() => StartBot((int)i * 2));
                             x.Name = $"{InternalProgramData.TargetSubReddit} bot n" + i;
                             x.IsBackground = true;
                             x.Start();

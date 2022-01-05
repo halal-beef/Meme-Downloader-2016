@@ -47,7 +47,6 @@
                 //ffmpeg file processing depends on TEMP!
                 Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
             }
-            BotHandler botSys = new();
 
             Console.WriteLine("Loading Configurations...");
 
@@ -91,7 +90,7 @@
             for (int i = 0; i < InternalProgramData.BotCount; i++)
             {
                 //Execute bots according to the ammount specified on BotCount 🥶👌
-                Thread x = new(() => botSys.StartBot(i * 2));
+                Thread x = new(() => BotHandler.StartBot(i * 2));
                 x.Name = $"{InternalProgramData.TargetSubReddit} bot n" + i;
                 x.IsBackground = true;
                 x.Start();
