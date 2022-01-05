@@ -11,14 +11,15 @@ This app downloads can download stuff from a subreddit of your choice and throws
 
 This app runs 32 threads by default, and is (sometimes) VERY resource hungry on memory, some processes might stay as zombies, that means, they don't die, examples are ffmpeg, that can prevent you from deleting the program 
 
-
 How to make `config.josn`?
 
 This is the default `config.json` configuration:
 
 ```
 {
-	"TargetSubreddit": "shitposting",
+	"TargetSubReddit0": "shitposting",
+	"TargetSubReddit1": "dankmemes",
+	"SimultaneousDownload": true,
 	"ThreadCount": 32
 }
 ```
