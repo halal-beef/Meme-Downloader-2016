@@ -16,7 +16,7 @@ This is the default config.json configuration:
 	"ThreadCount": 32
 }
 ```
-**TargetSubreddit**: This is the subreddit from where you want to get posts from
+**TargetSubreddit**: This is the subreddit from where you want to get posts from <br>
 **ThreadCount**: This is how many bots will run simultaneously, going over 32 is normally overkill
 
 
