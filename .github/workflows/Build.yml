@@ -1,6 +1,7 @@
 name: Build MemeDownloader2016 For Linux And Windows
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
   pull_request:
