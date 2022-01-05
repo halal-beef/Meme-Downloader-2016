@@ -24,9 +24,9 @@
                 {
                     //Announce collection!
                     collectionOnProgress = true;
-
+                    Thread.Sleep(1000);
                     Console.WriteLine("Garbage Collection Working. Please Hold!");
-                    Thread.Sleep(5000);
+                    
 
                     GC.Collect();
                     collectionOnProgress = false;

@@ -20,25 +20,18 @@
                 {
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
+                        Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         //Setup the request to use TLS 1.2
-                        HttpClientHandler handler = new()
-                        {
-                            SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-                            UseCookies = true,
-                            AutomaticDecompression = DecompressionMethods.All
-                        };
-
-                    string data = "";
+                        string data = "";
                         try
                         {
-                            data = new HttpClient(handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
+                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
                         }
                         finally
                         {
-                            data = new HttpClient(handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
+                            data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit}/random.json?limit=1").GetAwaiter().GetResult();
                         }
 
-                        Thread.Sleep(timeOut + rand.Next(0, timeOut));
 
                         var Result = JObject.Parse(
 
@@ -81,7 +74,7 @@
 
                                 Console.WriteLine($"AUDIOLINK: {AudioLink}");
                                 Console.WriteLine($"VIDEOLINK: {VideoLink}");
-                                HttpClient client = new();
+                                HttpClient client = new(InternalProgramData.handler);
 
                                 HttpResponseMessage hrm0 = client.GetAsync(AudioLink).GetAwaiter().GetResult();
                                 HttpResponseMessage hrm1 = client.GetAsync(VideoLink).GetAwaiter().GetResult();
@@ -132,7 +125,6 @@
                         else if (sourceLink == null || !sourceLink.Contains("v.redd.it"))
                         {
                             //Normal Execution
-
                             if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
                             {
                                 PathToResult += ".htm";
@@ -143,7 +135,7 @@
                             {
                                 using (FileStream fs = File.Create(PathToResult))
                                 {
-                                    HttpClient httpClient = new();
+                                    HttpClient httpClient = new(InternalProgramData.handler);
 
                                     HttpResponseMessage hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
 
@@ -167,6 +159,8 @@
                                 Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" Already Downloaded!!!!");
                             }
                         }
+                        //Add a time out after downloading.
+                        Thread.Sleep(timeOut + rand.Next(0, timeOut));
                     }
                     else
                     {
