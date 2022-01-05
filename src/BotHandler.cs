@@ -18,50 +18,113 @@
                 {
                     if (!OptimizeMemory.collectionOnProgress)
                     {
+                        string data = new HttpClient().GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1").GetAwaiter().GetResult();
+
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
+                        
                         var Result = JObject.Parse(
-                            JArray.Parse(
 
-                                new HttpClient()
-
-                                .GetStringAsync("https://reddit.com/r/shitposting/random.json?limit=1").GetAwaiter().GetResult()
-
-                                )[0]["data"]["children"][0]["data"]
-                                .ToString()
+                            JArray.Parse(data)[0]["data"]["children"][0]["data"].ToString()
 
                             );
 
                         string usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
                         string PathToResult = Environment.CurrentDirectory + @"/Shitposs/" + usableName;
 
-                        if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
+                        //Get Video if content is of that type.
+
+                        string sourceLink = Result.Value<string>("url_overridden_by_dest");
+
+                        if (sourceLink.Contains("v.redd.it"))
                         {
-                            PathToResult += ".htm";
-                        }
+                            var result0 = JObject.Parse(
+
+                                JArray.Parse(data)[0]["data"]["children"][0]["data"]["secure_media"]["reddit_video"].ToString()
+
+                                );
 
 
-                        if (!File.Exists(PathToResult))
-                        {
-                            using (FileStream fs = File.Create(PathToResult))
+                            string VideoLink = result0.Value<string>("fallback_url").Split('?')[0];
+                            string AudioLink = sourceLink + "/DASH_audio.mp4";
+
+                            Console.WriteLine($"AUDIOLINK: {AudioLink}");
+                            Console.WriteLine($"VIDEOLINK: {VideoLink}");
+                            HttpClient client = new();
+
+                            HttpResponseMessage hrm0 = client.GetAsync(AudioLink).GetAwaiter().GetResult();
+                            HttpResponseMessage hrm1 = client.GetAsync(VideoLink).GetAwaiter().GetResult();
+
+                            try
                             {
-                                HttpClient httpClient = new();
+                                hrm0.EnsureSuccessStatusCode();
 
-                                HttpResponseMessage hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
-
-                                try
-                                {
-                                    hrm.EnsureSuccessStatusCode();
-                                }
-                                catch
-                                {
-                                    Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
-                                    Environment.Exit(0);
-                                }
-                                hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
-                                fs.Dispose();
-                                fs.Close();
+                                hrm1.EnsureSuccessStatusCode();
                             }
-                            Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine($"{Thread.CurrentThread.Name}; Detected reddit video, but failed to get it. {ex.Message}");
+                            }
+
+                            using (FileStream fs = File.Create(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4"))
+                            {
+                                hrm0.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                            }
+                            using (FileStream fs = File.Create(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4"))
+                            {
+                                hrm1.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                            }
+                            Thread encoder = new(
+                                () => 
+                            MergeAudioAndVideo.UseFFMPEG(
+                                Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", 
+                                Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4", 
+                                Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult));
+                            encoder.IsBackground = true;
+                            encoder.Start();
+
+                            while (encoder.IsAlive)
+                            {
+                                Thread.Sleep(5);
+                            }
+
+                            //Delete temp files!
+                            File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
+                            File.Delete(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4");
+
+                        }
+                        else
+                        {
+                            //Normal Execution
+
+                            if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
+                            {
+                                PathToResult += ".htm";
+                            }
+
+
+                            if (!File.Exists(PathToResult))
+                            {
+                                using (FileStream fs = File.Create(PathToResult))
+                                {
+                                    HttpClient httpClient = new();
+
+                                    HttpResponseMessage hrm = httpClient.GetAsync(Result["url"].ToString()).GetAwaiter().GetResult();
+
+                                    try
+                                    {
+                                        hrm.EnsureSuccessStatusCode();
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
+                                        Environment.Exit(0);
+                                    }
+                                    hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                                    fs.Dispose();
+                                    fs.Close();
+                                }
+                                Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
+                            }
                         }
                     }
                     else
@@ -81,6 +144,14 @@
                 }
             }
         }
+        
+        //Making a Reddit Video Grabber :D
+        public static void RedditVideoBot(string uri)
+        {
+
+
+        }
+
         public void CheckAndReviveBots()
         {
             BotHandler botSys = new();
