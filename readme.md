@@ -6,4 +6,13 @@ This app downloads can download stuff from subreddits and throw it onto a folder
 
 This app runs 64 threads, and is (sometimes) VERY resource hungry on memory
 
+
+Credits:
+
 Original Idea: [SmallPP420](https://github.com/SmallPP420)
+
+------------------
+
+Thanks to: 
+
+TeNaihi for helping me test it :D
