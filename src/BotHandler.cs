@@ -19,7 +19,8 @@
                     {
                         BotStatus.aliveBots0.Add(true);
                     }
-                } else if (!modeA) 
+                } 
+                else if (!modeA) 
                 {
                     lock (locked0)
                     {
@@ -32,6 +33,20 @@
                 {
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM || InternalProgramData.RestartBot)
                     {
+                        //Thread.CurrentThread.Name
+
+                        //Change Thread Name!
+
+                        string[] splitedThreadName = Thread.CurrentThread.Name.Split('|');
+
+                        if (modeA) {
+                            Thread.CurrentThread.Name = InternalProgramData.TargetSubReddit0 + " " + splitedThreadName[1];
+                        }
+                        else
+                        {
+                            Thread.CurrentThread.Name = InternalProgramData.TargetSubReddit1 + " " + splitedThreadName[1];
+                        }
+                        
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         bool requestSuccess = false;
                         string data = "";
@@ -214,7 +229,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                            x.Name = $"{InternalProgramData.TargetSubReddit0} | bot n" + i;
                             x.IsBackground = true;
                             x.Start();
                         }
@@ -223,7 +238,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
+                            x.Name = $"{InternalProgramData.TargetSubReddit1} | bot n" + i;
                             x.IsBackground = true;
                             x.Start();
                         }
@@ -238,7 +253,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
+                            x.Name = $"{InternalProgramData.TargetSubReddit0} | bot n" + i;
                             x.IsBackground = true;
                             x.Start();
                         }
@@ -251,7 +266,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
+                            x.Name = $"{InternalProgramData.TargetSubReddit1} | bot n" + i;
                             x.IsBackground = true;
                             x.Start();
                         }
