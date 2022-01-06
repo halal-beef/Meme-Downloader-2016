@@ -178,8 +178,8 @@
             Console.WriteLine("Making Dirs...");
             Directory.CreateDirectory("Shitposs");
 
-            Console.WriteLine("Starting Hell!");
-
+            Console.WriteLine("Starting Hell! \n\nNOTE N1: Don't worry if you don't see any output on this console, that is because the program is finding a lot of repetitions and it isn't logging them :)");
+            Console.WriteLine($"NOTE N2: You can quit on ANY moment pressing ANY key on the keyboard, doing it this way provides a lower chance of ending up with corrupted downloads (The program closes after 25 seconds)\n\n\n\n\n");
             if (InternalProgramData.SimultaneousDownload) {
 
                 for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
@@ -212,15 +212,25 @@
 
 
             new Thread(() => OptimizeMemory.CallGC(1024)).Start();
+            new Thread(() => DynamicDownloader.RepeatWatchdog()).Start();
+
+
+
+
+
+
+
+
 
             Console.ReadKey();
             Console.Clear();
 
             InternalProgramData.STOPPROGRAM = true;
 
-            //Kill Orphan ffmpeg processes
+            //Kill Orphan ffmpeg processes after 25 seconds and close the application
+            Thread.Sleep(25000);
             ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
-            Thread.Sleep(10000);
+            Environment.Exit(0);
         }
     }
 }

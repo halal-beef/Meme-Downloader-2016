@@ -23,8 +23,15 @@
         public static void ApplyConfigs(Configurations configs)
         {
             InternalProgramData.BotCount = configs.ThreadCount;
+
             InternalProgramData.TargetSubReddit0 = configs.TargetSubReddit0;
             InternalProgramData.TargetSubReddit1 = configs.TargetSubReddit1;
+            InternalProgramData.TargetSubReddit2 = configs.TargetSubReddit2;
+            InternalProgramData.TargetSubReddit3 = configs.TargetSubReddit3;
+            InternalProgramData.TargetSubReddit4 = configs.TargetSubReddit4;
+
+            InternalProgramData.MaxRepeatTimes = configs.MaxRepeatTimes;
+
             InternalProgramData.SimultaneousDownload = configs.SimultaneousDownload;
         }
     }

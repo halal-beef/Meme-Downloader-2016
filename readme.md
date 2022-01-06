@@ -21,11 +21,17 @@ This is the default `config.json` configuration:
 {
 	"TargetSubReddit0": "shitposting",
 	"TargetSubReddit1": "dankmemes",
+	"TargetSubReddit2": "memes",
+	"TargetSubReddit3": "crappyoffbrands",
+	"TargetSubReddit4": "nocontextpics",
+	"MaxRepeatTimes": 10000,
 	"SimultaneousDownload": true,
 	"ThreadCount": 32
 }
 ```
-**TargetSubreddit**: This is the subreddit from where you want to get posts from <br>
+**TargetSubreddit(0, 1, 2, 3)**: This are the subreddits from where you want to get posts from <br>
+**MaxTimesRepeated**: This is the max amount of times the bot has to get a "It already exists" to change and download from another subreddit<br>
+**SimultaneousDownload**: This enables the program to download from two subreddits simultaneously<br>
 **ThreadCount**: This is how many bots will run simultaneously, going over 32 is normally overkill
 
 ------------------
