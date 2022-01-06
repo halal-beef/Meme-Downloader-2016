@@ -72,8 +72,11 @@ namespace Dottik.MemeDownloader
                             Environment.Exit(0);
                         }
                     }
+                    RestartBot = true;
                     TimesRepeated = 0;
                 }
+                Thread.Sleep(2500);
+                RestartBot = false;
             }
         }
     }

@@ -30,7 +30,7 @@
 
                 while (!InternalProgramData.STOPPROGRAM)
                 {
-                    if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
+                    if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM || InternalProgramData.RestartBot)
                     {
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
 
@@ -129,8 +129,9 @@
                     }
                     else
                     {
-                        Thread.Sleep(200);
+                        throw new Exception("Bot Reboot.");
                     }
+
                 }
                 if (isBot0) {
                     BotStatus.aliveBots0.RemoveAt(0);
