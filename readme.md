@@ -38,7 +38,7 @@ This is the default `config.json` configuration:
 
 ### **NOTES**:
 
- - After downloading dependencies the program will fail to run the bots, close and open again the program for it to work as intended
+ - After restarting the program after installing the dependencies, it will fail to run, please, close it forcefully and open it back again to fix this issue
 
 ------------------
 
