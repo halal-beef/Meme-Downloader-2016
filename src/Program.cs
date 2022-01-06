@@ -122,7 +122,7 @@
                 {
                     string
                         ytdlpsha256 = "1A34F627CA88251BE6D17940F026F6A5B8AAAF0AA32DD60DEEC3020F81950E67",
-                       ffmpegsha256 = "53DACF3684CAF3DC609EB4C6AD2F7A325A76833C9B55BD0E320F432E40E55746";
+                       ffmpegsha256 = "436844A3ECF9B2ECC13E57B2B5D000ADBB6FEA6FE99C7D5921C99284A91C50DC";
 
                     bool ytdlpOK = VerifyFileIntegrity(ytdlpsha256, Environment.CurrentDirectory + @"/Dependencies/yt-dlp.exe");
                     bool ffmpegOK = VerifyFileIntegrity(ffmpegsha256, Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe");
