@@ -13,7 +13,7 @@
         public static string TargetSubReddit2 = "";
         public static string TargetSubReddit3 = "";
         public static string TargetSubReddit4 = "";
-
+        public static string TargetSubReddit5 = "";
         public static bool SimultaneousDownload = false;
         public static bool STOPPROGRAM = false;
         public static bool RestartBot = false;
@@ -39,6 +39,7 @@
         public string TargetSubReddit2 = "memes";
         public string TargetSubReddit3 = "crappyoffbrands";
         public string TargetSubReddit4 = "nocontextpics";
+        public string TargetSubReddit5 = "funny";
         public ulong MaxRepeatTimes = 10000;
         public bool SimultaneousDownload = true;
         public int ThreadCount = 32;

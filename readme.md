@@ -24,6 +24,7 @@ This is the default `config.json` configuration:
 	"TargetSubReddit2": "memes",
 	"TargetSubReddit3": "crappyoffbrands",
 	"TargetSubReddit4": "nocontextpics",
+	"TargetSubReddit5": "funny",
 	"MaxRepeatTimes": 10000,
 	"SimultaneousDownload": true,
 	"ThreadCount": 32

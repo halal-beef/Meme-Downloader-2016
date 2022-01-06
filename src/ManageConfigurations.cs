@@ -29,6 +29,7 @@
             InternalProgramData.TargetSubReddit2 = configs.TargetSubReddit2;
             InternalProgramData.TargetSubReddit3 = configs.TargetSubReddit3;
             InternalProgramData.TargetSubReddit4 = configs.TargetSubReddit4;
+            InternalProgramData.TargetSubReddit5 = configs.TargetSubReddit5;
 
             InternalProgramData.MaxRepeatTimes = configs.MaxRepeatTimes;
 
