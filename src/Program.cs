@@ -45,7 +45,7 @@
                     string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
                     using (FileStream fs0 = File.Create(FFMPEGZIPPATH))
                     {
-                        HttpResponseMessage hrm4 = new HttpClient(handler: InternalProgramData.handler).GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip").GetAwaiter().GetResult();
+                        HttpResponseMessage hrm4 = new HttpClient(handler: InternalProgramData.handler).GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2022-01-06-12-21/ffmpeg-N-105193-g2b541b8c1d-win64-gpl.zip").GetAwaiter().GetResult();
                         hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                     }
                     ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
@@ -121,8 +121,8 @@
                 try
                 {
                     string
-                       ytdlpsha256 = "1A34F627CA88251BE6D17940F026F6A5B8AAAF0AA32DD60DEEC3020F81950E67",
-                       ffmpegsha256 = "D6DEEDD283FCCE95B3709C7FBF716419443E14209AD6866F3D14A78D1F077E39";
+                        ytdlpsha256 = "1A34F627CA88251BE6D17940F026F6A5B8AAAF0AA32DD60DEEC3020F81950E67",
+                       ffmpegsha256 = "53DACF3684CAF3DC609EB4C6AD2F7A325A76833C9B55BD0E320F432E40E55746";
 
                     bool ytdlpOK = VerifyFileIntegrity(ytdlpsha256, Environment.CurrentDirectory + @"/Dependencies/yt-dlp.exe");
                     bool ffmpegOK = VerifyFileIntegrity(ffmpegsha256, Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe");
