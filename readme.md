@@ -44,13 +44,13 @@ This is the default `config.json` configuration:
 
 Credits:
 
-Original Idea: [SmallPP420](https://github.com/SmallPP420)
+  - Original Idea: [SmallPP420](https://github.com/SmallPP420)
 
 ------------------
 
 Thanks to: 
 
-TeNaihi for helping me test it :D
+  - TeNaihi for helping me test it :D
 
 ------------------
 
