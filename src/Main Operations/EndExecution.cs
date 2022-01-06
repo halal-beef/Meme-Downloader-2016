@@ -4,7 +4,7 @@
     {
         public static void TerminateProgram()
         {
-            //Kill Orphan ffmpeg processes after 25 seconds and close the application
+            //Wait 25 seconds to allow most pending downloads to complete and close the application
             Thread.Sleep(25000);
             Environment.Exit(0);
         }

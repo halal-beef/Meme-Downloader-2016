@@ -189,6 +189,19 @@
             Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit4}");
             Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit5}");
 
+            Console.WriteLine("Testing Internet Connection...");
+
+
+            try
+            {
+                new HttpClient(handler: InternalProgramData.handler).GetStringAsync("http://1.1.1.1/").GetAwaiter().GetResult();
+            } 
+            catch
+            {
+                Console.WriteLine("Internet Connection is Unavailable. If you think this is an error and you DO have internet connection, restart the program and try again.");
+                Environment.Exit(-1);
+            }
+
             Console.WriteLine("Starting Hell! \n\nNOTE N1: Don't worry if you don't see any output on this console, that is because the program is finding a lot of repetitions and it isn't logging them :)");
             Console.WriteLine($"NOTE N2: You can quit on ANY moment pressing ANY key on the keyboard, doing it this way provides a lower chance of ending up with corrupted downloads (The program closes after 25 seconds)\n\n\n\n\n");
             if (InternalProgramData.SimultaneousDownload) {
