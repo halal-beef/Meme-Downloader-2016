@@ -19,7 +19,8 @@
                     {
                         BotStatus.aliveBots0.Add(true);
                     }
-                } else if (!modeA) 
+                } 
+                else if (!modeA) 
                 {
                     lock (locked0)
                     {
@@ -32,6 +33,20 @@
                 {
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM || InternalProgramData.RestartBot)
                     {
+                        //Thread.CurrentThread.Name
+
+                        //Change Thread Name!
+
+                        string[] splitedThreadName = Thread.CurrentThread.Name.Split('|');
+
+                        if (modeA) {
+                            Thread.CurrentThread.Name = InternalProgramData.TargetSubReddit0 + " " + splitedThreadName[1];
+                        }
+                        else
+                        {
+                            Thread.CurrentThread.Name = InternalProgramData.TargetSubReddit1 + " " + splitedThreadName[1];
+                        }
+                        
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         bool requestSuccess = false;
                         string data = "";
