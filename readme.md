@@ -38,19 +38,19 @@ This is the default `config.json` configuration:
 
 ### **NOTES**:
 
- - After downloading dependencies the program will fail to run the bots, close and open again the program for it to work as intended
+ - After restarting the program after installing the dependencies, it will fail to run, please, close it forcefully and open it back again to fix this issue
 
 ------------------
 
 Credits:
 
-Original Idea: [SmallPP420](https://github.com/SmallPP420)
+  - Original Idea: [SmallPP420](https://github.com/SmallPP420)
 
 ------------------
 
 Thanks to: 
 
-TeNaihi for helping me test it :D
+  - TeNaihi for helping me test it :D
 
 ------------------
 
