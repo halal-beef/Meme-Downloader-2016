@@ -33,19 +33,6 @@
                 {
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM || InternalProgramData.RestartBot)
                     {
-                        //Thread.CurrentThread.Name
-
-                        //Change Thread Name!
-
-                        string[] splitedThreadName = Thread.CurrentThread.Name.Split('|');
-
-                        if (modeA) {
-                            Thread.CurrentThread.Name = InternalProgramData.TargetSubReddit0 + " " + splitedThreadName[1];
-                        }
-                        else
-                        {
-                            Thread.CurrentThread.Name = InternalProgramData.TargetSubReddit1 + " " + splitedThreadName[1];
-                        }
                         
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         bool requestSuccess = false;
@@ -79,12 +66,19 @@
                                 }
                             }
                         }
+                        JObject Result = new JObject();
+                        try
+                        {
+                            Result = JObject.Parse(
 
-                        var Result = JObject.Parse(
+                                JArray.Parse(data)[0]["data"]["children"][0]["data"].ToString()
 
-                            JArray.Parse(data)[0]["data"]["children"][0]["data"].ToString()
-
-                            );
+                                );
+                        }
+                        catch
+                        {
+                            throw new Exception("Error Parsing JSON!");
+                        }
                         string usableName = "", sourceLink = "";
 
                         try
@@ -187,11 +181,11 @@
                 {
                     if(!ex.Message.Contains("Restart") && isBot0) 
                     {
-                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, INNER EXCEPTION: {ex.InnerException}");
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}");
                     }
                     else if(!ex.Message.Contains("Restart") && !isBot0)
                     {
-                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, INNER EXCEPTION: {ex.InnerException}");
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}");
                     }
                     else
                     {
@@ -229,7 +223,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit0} | bot n" + i;
+                            x.Name = $"- bot n{i}";
                             x.IsBackground = true;
                             x.Start();
                         }
@@ -238,7 +232,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit1} | bot n" + i;
+                            x.Name = $"- bot n{i}";
                             x.IsBackground = true;
                             x.Start();
                         }
@@ -253,7 +247,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit0} | bot n" + i;
+                            x.Name = $"- bot n{i}";
                             x.IsBackground = true;
                             x.Start();
                         }
@@ -266,7 +260,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
-                            x.Name = $"{InternalProgramData.TargetSubReddit1} | bot n" + i;
+                            x.Name = $"- bot n{i}";
                             x.IsBackground = true;
                             x.Start();
                         }

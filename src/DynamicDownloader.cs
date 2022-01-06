@@ -59,9 +59,9 @@ namespace Dottik.MemeDownloader
                         }
                         else if (TargetSubReddit0 == TargetSubReddit2 && TargetSubReddit1 == TargetSubReddit3)
                         {
-                            Console.WriteLine($"\n\nChanging download targets!\n/r/{TargetSubReddit0} -> /r/{TargetSubReddit4}  | Last Subreddit to download!\n/r/{TargetSubReddit1} -> /r/{initialValueOfTSR0} | Last Subreddit to download!\n\n");
+                            Console.WriteLine($"\n\nChanging download targets!\n/r/{TargetSubReddit0} -> /r/{TargetSubReddit4}  | Last Subreddit to download!\n/r/{TargetSubReddit1} -> /r/{TargetSubReddit5} | Last Subreddit to download!\n\n");
                             TargetSubReddit0 = TargetSubReddit4;
-                            TargetSubReddit1 = initialValueOfTSR0;
+                            TargetSubReddit1 = TargetSubReddit5;
                         }
                         else
                         {
