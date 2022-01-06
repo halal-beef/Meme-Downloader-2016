@@ -49,7 +49,7 @@
                         hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                     }
                     ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
-                    File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", true);
+                    File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-N-105193-g2b541b8c1d-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", true);
                 });
 
             Thread getYTDLP = new(() =>
