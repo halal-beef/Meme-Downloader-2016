@@ -33,11 +33,22 @@
                     if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM || InternalProgramData.RestartBot)
                     {
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
-
+                        bool requestSuccess = false;
                         string data = "";
-                        
-                        data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
 
+                        while (!requestSuccess)
+                        {
+                            try
+                            {
+                                data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
+                                requestSuccess = true;
+                            }
+                            catch
+                            {
+                                data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
+                                requestSuccess = true;
+                            }
+                        }
 
                         var Result = JObject.Parse(
 
@@ -150,7 +161,7 @@
                     }
                     else if(!ex.Message.Contains("Restart") && !isBot0)
                     {
-                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, bots {Target} Left: {BotStatus.aliveBots1.Count}");
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, INNER EXCEPTION: {ex.InnerException}");
                     }
                     else
                     {
