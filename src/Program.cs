@@ -146,6 +146,7 @@
             {
                 Console.WriteLine("Configuration file does not exist, using default configuration and creating one...");
                 ConfigurationManager.CreateConfigs(new Configurations());
+                ConfigurationManager.ApplyConfigs(new Configurations());
             }
             else
             {
