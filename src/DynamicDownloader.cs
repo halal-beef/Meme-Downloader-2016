@@ -16,6 +16,7 @@ namespace Dottik.MemeDownloader
                 {
                     if (!SimultaneousDownload) 
                     {
+                        GC.Collect();
                         if (TargetSubReddit0 == initialValueOfTSR0)
                         {
                             Console.WriteLine($"\n\nChanging download target!\n/r/{TargetSubReddit0} -> /r/{TargetSubReddit1}\n\n");
@@ -49,6 +50,7 @@ namespace Dottik.MemeDownloader
                     } 
                     else
                     {
+                        GC.Collect();
                         if ( TargetSubReddit0 == initialValueOfTSR0 && TargetSubReddit1 == initialValueOfTSR1)
                         {
                             Console.WriteLine($"\n\nChanging download targets!\n/r/{TargetSubReddit0} -> /r/{TargetSubReddit2}\n /r/{TargetSubReddit1} -> /r/{TargetSubReddit3}\n\n");
