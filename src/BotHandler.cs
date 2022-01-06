@@ -8,18 +8,18 @@
 
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        public static void StartBot(string Target, int timeOut = 50)
+        public static void StartBot(bool modeA, int timeOut = 50)
         {
             bool isBot0 = false;
             try
             {
-                if (Target == InternalProgramData.TargetSubReddit0) {
+                if (modeA) {
                     isBot0 = true;
                     lock (locked)
                     {
                         BotStatus.aliveBots0.Add(true);
                     }
-                } else if (Target == InternalProgramData.TargetSubReddit1) 
+                } else if (!modeA) 
                 {
                     lock (locked0)
                     {
@@ -40,13 +40,28 @@
                         {
                             try
                             {
-                                data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
-                                requestSuccess = true;
+                                if (modeA)
+                                {
+                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult();
+                                    requestSuccess = true;
+                                } else
+                                {
+                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult();
+                                    requestSuccess = true;
+                                }
                             }
                             catch
                             {
-                                data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{Target}/random.json").GetAwaiter().GetResult();
-                                requestSuccess = true;
+                                if (modeA)
+                                {
+                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult();
+                                    requestSuccess = true;
+                                }
+                                else
+                                {
+                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult();
+                                    requestSuccess = true;
+                                }
                             }
                         }
 
@@ -157,7 +172,7 @@
                 {
                     if(!ex.Message.Contains("Restart") && isBot0) 
                     {
-                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message} and STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}, bots {Target} Left: {BotStatus.aliveBots0.Count}");
+                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, INNER EXCEPTION: {ex.InnerException}");
                     }
                     else if(!ex.Message.Contains("Restart") && !isBot0)
                     {
@@ -198,7 +213,7 @@
                         for (float i = amountToRevive0; i < totalBots / 2 / 2; i++)
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
+                            Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
                             x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
                             x.IsBackground = true;
                             x.Start();
@@ -207,7 +222,7 @@
                         for (float i = amountToRevive; i < totalBots / 2; i++)
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, (int)i * 2));
+                            Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
                             x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
                             x.IsBackground = true;
                             x.Start();
@@ -222,7 +237,7 @@
                         for (float i = amountToRevive; i < totalBots / 2; i++)
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit0, (int)i * 2));
+                            Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
                             x.Name = $"{InternalProgramData.TargetSubReddit0} bot n" + i;
                             x.IsBackground = true;
                             x.Start();
@@ -235,7 +250,7 @@
                         for (float i = amountToRevive; i < totalBots / 2; i++)
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(InternalProgramData.TargetSubReddit1, (int)i * 2));
+                            Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
                             x.Name = $"{InternalProgramData.TargetSubReddit1} bot n" + i;
                             x.IsBackground = true;
                             x.Start();
