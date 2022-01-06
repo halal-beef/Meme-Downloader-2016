@@ -14,7 +14,8 @@
                 Process pro = Process.GetCurrentProcess();
                 bool shouldCollect = false;
 
-                //Calls GC when memory is more than 1024MB
+                //Calls GC when memory is more than {RamLimit}MB
+
                 if (pro.WorkingSet64 >= RamLimit * 1000000)
                 {
                     shouldCollect = true;
@@ -25,47 +26,16 @@
                     //Announce collection!
                     collectionOnProgress = true;
                     Thread.Sleep(1000);
-                    Console.WriteLine("Garbage Collection Working. Please Hold!");
+                    Console.WriteLine("Memory Limit Reached! Garbage Collection Triggered!");
                     
-
                     GC.Collect();
+
+                    //Sleep for 10 secs 
+                    Thread.Sleep(10000);
                     collectionOnProgress = false;
                 }
             }
 
-        }
-    }
-    internal class ProcessOptimizer
-    {
-        public static void KillOrphanProcessProcName(string ProcessName)
-        {
-            Process proc = new();
-            ProcessStartInfo info = new();
-
-            info.FileName = "taskkill";
-            info.Arguments = $" /f /im {ProcessName}";
-
-            proc.StartInfo = info;
-
-            proc.Start();
-
-            proc.WaitForExit();
-        }
-        public static void KillOrphanProcessPID(int PID)
-        {
-            Process proc = new();
-            ProcessStartInfo info = new();
-
-            info.FileName = "taskkill";
-            info.Arguments = $" /f /pid {PID}";
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-
-            proc.StartInfo = info;
-
-            proc.Start();
-
-            proc.WaitForExit();
         }
     }
 }

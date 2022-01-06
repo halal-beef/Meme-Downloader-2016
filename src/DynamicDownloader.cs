@@ -35,18 +35,16 @@ namespace Dottik.MemeDownloader
                         else if (TargetSubReddit0 == TargetSubReddit3)
                         {
                             Console.WriteLine($"\n\nChanging download target!\n/r/{TargetSubReddit0} -> /r/{TargetSubReddit4} | Last Subreddit to download!\n\n");
+
                             TargetSubReddit0 = TargetSubReddit4;
                         } 
                         else if (TargetSubReddit0 == TargetSubReddit4)
                         {
                             Console.WriteLine("Terminating Program. The program couldn't find more available resources to download.");
                             InternalProgramData.STOPPROGRAM = true;
-
-                            //Kill Orphan ffmpeg processes after 25 seconds and close the application
-                            Thread.Sleep(25000);
-                            ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
-                            Environment.Exit(0);
+                            EndExecution.TerminateProgram();
                         }
+
                     } 
                     else
                     {
@@ -68,13 +66,12 @@ namespace Dottik.MemeDownloader
                             Console.WriteLine("||===========||| Terminating Program. The program couldn't find more available resources to download. |||==========|||");
                             InternalProgramData.STOPPROGRAM = true;
 
-                            //Kill Orphan ffmpeg processes after 25 seconds and close the application
-                            Thread.Sleep(25000);
-                            ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
-                            Environment.Exit(0);
+                            EndExecution.TerminateProgram();
                         }
                     }
                     RestartBot = true;
+                    Thread.Sleep(5000);
+                    RestartBot = false;
                     TimesRepeated = 0;
                 }
                 Thread.Sleep(2500);

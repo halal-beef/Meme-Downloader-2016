@@ -17,26 +17,27 @@
                     isBot0 = true;
                     lock (locked)
                     {
-                        BotStatus.aliveBots0.Add(true);
+                        BotInformation.aliveBots0.Add(true);
                     }
                 } 
                 else if (!modeA) 
                 {
                     lock (locked0)
                     {
-                        BotStatus.aliveBots1.Add(true);
+                        BotInformation.aliveBots1.Add(true);
                     } 
                 }
                 Random rand = new();
 
                 while (!InternalProgramData.STOPPROGRAM)
                 {
-                    if (!OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM || InternalProgramData.RestartBot)
+
+                    if (!InternalProgramData.RestartBot && !OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
                         
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
-                        bool requestSuccess = false;
-                        string data = "";
+                        bool requestSuccess = false, blacklisted = false;
+                        string data = "", target = "";
 
                         while (!requestSuccess)
                         {
@@ -46,10 +47,12 @@
                                 {
                                     data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult();
                                     requestSuccess = true;
+                                    target = InternalProgramData.TargetSubReddit0;
                                 } else
                                 {
                                     data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult();
                                     requestSuccess = true;
+                                    target = InternalProgramData.TargetSubReddit1;
                                 }
                             }
                             catch
@@ -66,7 +69,7 @@
                                 }
                             }
                         }
-                        JObject Result = new JObject();
+                        JObject Result = new();
                         try
                         {
                             Result = JObject.Parse(
@@ -91,43 +94,56 @@
                             usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
                             sourceLink = Result["url"].ToString();
                         }
-                        string PathToResult = Environment.CurrentDirectory + @"/Shitposs/" + usableName;
 
-                        if (sourceLink != null && sourceLink.Contains("v.redd.it") && Result.Value<bool>("is_video"))
+                        string PathToResult = Environment.CurrentDirectory + @"/Downloaded Content/" + @$"/{target}/" + usableName;
+
+                        
+                        foreach (string BlackListedURL in BotInformation.BlackListed)
                         {
-                            GetRedditVideo.GetVideoMp4(PathToResult, data, sourceLink, usableName);
-                        }
-                        else if (sourceLink != null && sourceLink.Contains("youtu.be") || sourceLink.Contains("youtube"))
-                        {
-                            if (!File.Exists(sourceLink + ".mp4"))
+                            if (sourceLink == BlackListedURL)
                             {
-                                Console.WriteLine("Detected YouTube Video/Clip! Attempting Download!");
-                                //GET video with yt-dlp
-                                YouTubeDLP YTDLP = new();
-
-                                YTDLP.VideoLink = sourceLink;
-
-                                YTDLP.GetVideoAsMP4(PathToResult);
-                            }
-                            else
-                            {
-                                InternalProgramData.TimesRepeated++;
+                                blacklisted = true;
+                                Console.WriteLine($"{Thread.CurrentThread.Name}; Tried to download a blacklisted URL.");
                             }
                         }
-                        else if (sourceLink == null || !sourceLink.Contains("v.redd.it") || !sourceLink.Contains("youtu.be") && !Result.Value<bool>("is_video"))
+
+                        if (!blacklisted)
                         {
-                            //Normal Execution
-                            if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
+                            if (sourceLink != null && sourceLink.Contains("v.redd.it") && Result.Value<bool>("is_video"))
                             {
-                                PathToResult += ".htm";
+                                GetRedditVideo.GetVideoMp4(PathToResult, data, sourceLink, usableName);
                             }
-
-
-                            if (!File.Exists(PathToResult))
+                            else if (sourceLink != null && sourceLink.Contains("youtu.be") || sourceLink.Contains("youtube"))
                             {
-                                try
+                                if (!File.Exists(sourceLink + ".mp4"))
                                 {
-                                    using FileStream fs = File.Create(PathToResult);
+                                    Console.WriteLine("Detected YouTube Video/Clip! Attempting Download!");
+                                    //GET video with yt-dlp
+                                    YouTubeDLP YTDLP = new();
+
+                                    YTDLP.VideoLink = sourceLink;
+
+                                    YTDLP.GetVideoAsMP4(PathToResult);
+                                }
+                                else
+                                {
+                                    InternalProgramData.TimesRepeated++;
+                                }
+                            }
+                            else if (sourceLink == null || !sourceLink.Contains("v.redd.it") || !sourceLink.Contains("youtu.be") && !Result.Value<bool>("is_video"))
+                            {
+                                //Normal Execution
+                                if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
+                                {
+                                    PathToResult += ".htm";
+                                }
+
+
+                                if (!File.Exists(PathToResult))
+                                {
+                                    try
+                                    {
+                                        using FileStream fs = File.Create(PathToResult);
                                         HttpClient httpClient = new(InternalProgramData.handler);
                                         HttpResponseMessage hrm;
 
@@ -146,17 +162,18 @@
                                         hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
                                         fs.Dispose();
                                         fs.Close();
-                                    Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
+                                        Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
 
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" is been already downloaded by another bot already!");
+                                    }
                                 }
-                                catch
+                                else
                                 {
-                                    Console.WriteLine($"{Thread.CurrentThread.Name}; Post \"{usableName}\" is been already downloaded by another bot already!");
+                                    InternalProgramData.TimesRepeated++;
                                 }
-                            } 
-                            else
-                            {
-                                InternalProgramData.TimesRepeated++;
                             }
                         }
                         //Add a time out after downloading.
@@ -169,10 +186,12 @@
 
                 }
                 if (isBot0) {
-                    BotStatus.aliveBots0.RemoveAt(0);
-                } else
+
+                    BotInformation.aliveBots0.RemoveAt(0);
+                } 
+                else
                 {
-                    BotStatus.aliveBots1.RemoveAt(0);
+                    BotInformation.aliveBots1.RemoveAt(0);
                 }
             }
             catch (Exception ex)
@@ -206,8 +225,8 @@
                 lock (botRespawnLocker)
                 {
                     float totalBots = InternalProgramData.BotCount,
-                          aliveBots0 = BotStatus.aliveBots0.Count,
-                          aliveBots1 = BotStatus.aliveBots1.Count;
+                          aliveBots0 = BotInformation.aliveBots0.Count,
+                          aliveBots1 = BotInformation.aliveBots1.Count;
 
                     float aliveBotsPercentage0 = aliveBots0 / totalBots * 100,
                           aliveBotsPercentage1 = aliveBots1 / totalBots * 100;

@@ -19,7 +19,8 @@
 
             if (!File.Exists(PathToResult + ".mp4"))
             {
-                bool audioAvailable = true, videoAvailable = true;
+                bool audioAvailable = true, 
+                     videoAvailable = true;
                 var result0 = JObject.Parse(
 
                 JArray.Parse(data)[0]["data"]["children"][0]["data"]["secure_media"]["reddit_video"].ToString()
@@ -62,7 +63,7 @@
                     Console.WriteLine($"{Thread.CurrentThread.Name}; Video and Audio aren't available.");
                 }
 
-                if (audioAvailable && videoAvailable)
+                if (audioAvailable && videoAvailable && !File.Exists(PathToResult + ".mp4"))
                 {
                     lock (mediaLockera)
                     {
@@ -84,7 +85,7 @@
                                 () =>
                                 MergeAudioAndVideo.UseFFMPEG(
                                 Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4",
-                                Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult + ".mp4"));
+                                Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult + ".mp4", sourceLink));
                             encoder.IsBackground = true;
                             encoder.Start();
 
@@ -108,7 +109,7 @@
                         }
                     }
                 }
-                else if (audioAvailable)
+                else if (audioAvailable && !File.Exists(PathToResult + "AUDIO_ONLY.mp3"))
                 {
                     lock (audioMediaLockera)
                     {
@@ -120,10 +121,10 @@
 
                         lock (audioMediaLockerb)
                         {
-                            PathToResult = Environment.CurrentDirectory + @$"/Shitposs/AUDIO_ONLY_{usableName}";
+                            PathToResult += "AUDIO_ONLY";
                             Thread audioEncoder = new(
                                 () =>
-                                MergeAudioAndVideo.UseFFMPEG(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4", PathToResult + ".mp3"));
+                                MergeAudioAndVideo.UseFFMPEG(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4", PathToResult + ".mp3", sourceLink));
                             audioEncoder.IsBackground = true;
                             audioEncoder.Start();
 
@@ -135,7 +136,7 @@
                         }
                     }
                 }
-                else if (videoAvailable)
+                else if (videoAvailable && !File.Exists(PathToResult + "VIDEO_ONLY.mp4"))
                 {
                     lock (videoMediaLockera)
                     {
@@ -145,23 +146,17 @@
                             fs.Dispose();
                             fs.Close();
 
+                        Console.WriteLine(PathToResult);
+                        PathToResult += "VIDEO_ONLY.mp4";
+
                         lock (videoMediaLockerb)
                         {
-                            PathToResult = Environment.CurrentDirectory + @$"/Shitposs/VIDEO_ONLY_{usableName}";
-                            Thread videoEncoder = new(
-                                () =>
-                                MergeAudioAndVideo.UseFFMPEG(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult + ".mp4"));
-
-                            videoEncoder.IsBackground = true;
-                            videoEncoder.Start();
-
-                            while (videoEncoder.IsAlive)
-                            {
-                                Thread.Sleep(50);
-                            }
-                            File.Delete(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4");
+                            File.Move(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult, true);
                         }
                     }
+                } else
+                {
+                    ProcessOptimizer.AddToBlacklist(sourceLink);
                 }
             }
             else

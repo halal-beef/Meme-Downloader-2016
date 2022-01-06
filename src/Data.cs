@@ -14,6 +14,7 @@
         public static string TargetSubReddit3 = "";
         public static string TargetSubReddit4 = "";
         public static string TargetSubReddit5 = "";
+
         public static bool SimultaneousDownload = false;
         public static bool STOPPROGRAM = false;
         public static bool RestartBot = false;
@@ -27,8 +28,9 @@
             AutomaticDecompression = DecompressionMethods.All
         };
     }
-    internal struct BotStatus
+    internal struct BotInformation
     {
+        public static List<string> BlackListed = new();
         public static List<bool> aliveBots0 = new();
         public static List<bool> aliveBots1 = new();
     }

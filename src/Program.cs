@@ -98,7 +98,6 @@
         {
             if (Directory.Exists(Environment.CurrentDirectory + @"/TEMP/"))
             {
-                ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
                 Directory.Delete(Environment.CurrentDirectory + @"/TEMP/", true);
 
                 Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
@@ -182,7 +181,13 @@
             Environment.SetEnvironmentVariable("PATH", newPath);
 
             Console.WriteLine("Making Dirs...");
-            Directory.CreateDirectory("Shitposs");
+            Directory.CreateDirectory("Downloaded Content");
+            Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit0}");
+            Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit1}");
+            Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit2}");
+            Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit3}");
+            Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit4}");
+            Directory.CreateDirectory($"Downloaded Content/{InternalProgramData.TargetSubReddit5}");
 
             Console.WriteLine("Starting Hell! \n\nNOTE N1: Don't worry if you don't see any output on this console, that is because the program is finding a lot of repetitions and it isn't logging them :)");
             Console.WriteLine($"NOTE N2: You can quit on ANY moment pressing ANY key on the keyboard, doing it this way provides a lower chance of ending up with corrupted downloads (The program closes after 25 seconds)\n\n\n\n\n");
@@ -233,10 +238,7 @@
 
             InternalProgramData.STOPPROGRAM = true;
 
-            //Kill Orphan ffmpeg processes after 25 seconds and close the application
-            Thread.Sleep(25000);
-            ProcessOptimizer.KillOrphanProcessProcName("ffmpeg.exe");
-            Environment.Exit(0);
+            EndExecution.TerminateProgram();
         }
     }
 }
