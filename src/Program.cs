@@ -160,14 +160,18 @@
                 
                     $"Threads: {InternalProgramData.BotCount}\n" +
                    
+                    $"Max Repeats Allowed Until Change of Subreddit: {InternalProgramData.MaxRepeatTimes}\n" +
+
                     $"Target Subreddit (n1): {InternalProgramData.TargetSubReddit0}\n" +
                     
                     $"Target Subreddit (n2): {InternalProgramData.TargetSubReddit1}\n" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
+
+                    $"Target Subreddit (n3): {InternalProgramData.TargetSubReddit2}\n" +
+                    
+                    $"Target Subreddit (n4): {InternalProgramData.TargetSubReddit3}\n" +
+                    
+                    $"Target Subreddit (n5): {InternalProgramData.TargetSubReddit4}\n" +
+
                     ""  );
 
             Console.WriteLine("Preparing Environment...");
