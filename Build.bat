@@ -13,8 +13,5 @@ dotnet publish "Meme Downloader 2016.csproj" --output "build-debug\\" --arch x64
 :: Move debug build
 move \build-debug\Meme Downloader 2016.exe \build\DEBUG-Meme Downloader 2016.exe
 
-:: Test build in CI mode
-cd build\
-
 echo 'Executing Meme Downloader 2016 in CI mode'
-"Meme Downloader 2016.exe -ci"
+".\build\Meme Downloader 2016.exe -ci"
