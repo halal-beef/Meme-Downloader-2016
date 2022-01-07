@@ -31,8 +31,8 @@ mkdir Zipper\build\
 
 dotnet publish "Zipper.csproj" --output build\ --arch x64 --os win -c release --self-contained true
 
-mv build\Zipper.exe ..\build\
+mv build\Zipper.exe ..
 
-cd ..\build
+cd ..
 
 Zipper.exe -Output=Downloaded-Content.zip -LocalFile -Folder="\Downloaded Content\" 
