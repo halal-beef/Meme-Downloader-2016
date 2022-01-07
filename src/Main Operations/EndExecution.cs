@@ -5,13 +5,12 @@
         public static void TerminateProgram()
         {
             Console.WriteLine("Waiting for downloads to finish...");
-            //Wait 25 seconds to allow most pending downloads to complete and close the application
-            Thread.Sleep(25000);
+            //Wait 35 seconds to allow most pending downloads and the latest blacklist possible to complete and close the application
+            Thread.Sleep(35000);
 
-            //Write Blacklist
-            WriteBlackList.WriteBlacklist();
-
-            Environment.Exit(0);
+            lock (WriteBlackList.blacklistLocker) {
+                Environment.Exit(0);
+            }
         }
     }
 }

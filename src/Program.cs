@@ -156,6 +156,9 @@
 
             //Manages the change between subreddits. 0 -> 1 -> 2 -> 3 -> 4 -> 5  
             new Thread(() => DynamicDownloader.RepeatWatchdog()).Start();
+
+            //Write blacklist while the game is running
+            new Thread(() => WriteBlackList.WriteBlacklistWhileRunning()).Start();
         }
     }
 }

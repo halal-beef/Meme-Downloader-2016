@@ -6,18 +6,29 @@
     }
     internal class WriteBlackList
     {
-        public static void WriteBlacklist()
+        public static Object blacklistLocker = new();
+        public static void WriteBlacklistWhileRunning()
         {
-            Blacklist blackListData = new();
-            string BlackListPath = Environment.CurrentDirectory + @"/blacklist.json";
+            while (true)
+            {
+                //Write Blacklist every 30 seconds while the program is running
+                Thread.Sleep(30000);
 
-            blackListData.BlacklistedURLs = BotInformation.BlackListed;
+                lock (blacklistLocker)
+                {
+                    Blacklist blackListData = new();
+                    string BlackListPath = Environment.CurrentDirectory + @"/blacklist.json";
 
-            string jsonContent = JsonConvert.SerializeObject(blackListData);
+                    blackListData.BlacklistedURLs = BotInformation.BlackListed;
 
-            File.WriteAllTextAsync(BlackListPath, jsonContent, Encoding.UTF8).GetAwaiter().GetResult();
-            Console.WriteLine($"Creating Blacklist on: {BlackListPath}");
+                    string jsonContent = JsonConvert.SerializeObject(blackListData);
+
+                    File.WriteAllText(BlackListPath, jsonContent, Encoding.UTF8);
+                    Console.WriteLine($"Writing Blacklist to {BlackListPath}...");
+                }
+            }
         }
+
     }
     internal class LoadBlackList
     {
