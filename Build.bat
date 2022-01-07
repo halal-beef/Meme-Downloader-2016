@@ -20,6 +20,8 @@ echo 'Compiling Zipper.exe and making all downloaded content onto a zip!'
 
 git clone https://github.com/usrDottik/Zipper.git
 
+cd Zipper\
+
 mkdir Zipper\build\
 
 dotnet publish "Zipper.csproj" --output "build\" --arch x64 --os win -c release --self-contained true
