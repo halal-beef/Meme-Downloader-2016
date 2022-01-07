@@ -16,7 +16,10 @@
             
             for (int i = 0; i < folders.Length; i++)
             {
-                Directory.CreateDirectory(folders[i]);
+                if (folders[i] != null && folders[i] != "")
+                {
+                    Directory.CreateDirectory(folders[i]);
+                }
             }
         }
         public static void TestConnection()

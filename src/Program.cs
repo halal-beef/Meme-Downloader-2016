@@ -142,7 +142,7 @@
                     folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit2}/|");
                     folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit3}/|");
                     folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit4}/|");
-                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit5}/|");
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit5}/");
 
                     PrepareEnvironment.CreateFolders(folders);
 
