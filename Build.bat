@@ -15,3 +15,20 @@ move "\build-debug\Meme Downloader 2016.exe" "\build\DEBUG-Meme Downloader 2016.
 
 echo 'Executing Meme Downloader 2016 in CI mode'
 ".\build\Meme Downloader 2016.exe" -ci
+
+echo 'Compiling Zipper.exe and making all downloaded content onto a zip!'
+
+mkdir ZipperSRC\
+mkdir ZipperSRC\build\
+
+cd .\ZipperSRC\
+
+git clone https://github.com/usrDottik/Zipper.git
+
+dotnet publish "Zipper.csproj" --output "build\\" --arch x64 --os win -c release --self-contained true
+
+mv \ZipperSRC\build\Zipper.exe ..\build\
+
+cd ..\build
+
+Zipper.exe -Folder='\Downloaded Content\' -Output=Downloaded-Content.zip -LocalFile
