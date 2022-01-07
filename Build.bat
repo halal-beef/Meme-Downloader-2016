@@ -11,7 +11,7 @@ dotnet publish "Meme Downloader 2016.csproj" --output "build\\" --arch x64 --os 
 dotnet publish "Meme Downloader 2016.csproj" --output "build-debug\\" --arch x64 --os win -c debug --self-contained true
 
 :: Move debug build
-move "\build-debug\Meme Downloader 2016.exe" "\build\DEBUG-Meme Downloader 2016.exe"
+move ".\build-debug\Meme Downloader 2016.exe" ".\build\DEBUG-Meme Downloader 2016.exe"
 
 cd .\build\
 
@@ -27,12 +27,10 @@ git clone https://github.com/usrDottik/Zipper.git
 
 cd Zipper\
 
-mkdir Zipper\build\
-
 dotnet publish "Zipper.csproj" --output build\ --arch x64 --os win -c release --self-contained true
 
 mv build\Zipper.exe ..
 
 cd ..
 
-Zipper.exe -Output=Downloaded-Content.zip -LocalFile -Folder="Downloaded Content\" 
+Zipper.exe -Output=Downloaded-Content.zip -LocalFile -Folder="Downloaded Content" 
