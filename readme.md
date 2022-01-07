@@ -26,7 +26,7 @@ This are the default values of `config.json` after being created:
 	"TargetSubReddit2": "memes",
 	"TargetSubReddit3": "crappyoffbrands",
 	"TargetSubReddit4": "nocontextpics",
-	"TargetSubReddit5": "funny",
+	"TargetSubReddit5": "arabfunny",
 	"MaxRepeatTimes": 10000,
 	"SimultaneousDownload": true,
 	"ThreadCount": 32
