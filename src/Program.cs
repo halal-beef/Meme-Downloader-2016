@@ -1,8 +1,29 @@
 ﻿namespace Dottik.MemeDownloader
-{ 
+{
     public class Program
-    {   
-        public static void Main()
+    {
+        public static void Main(string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i].Contains("-ci"))
+                {
+                    Thread KillOnCI = new(() =>
+                    {
+                        //Wait 2 Minutes and kill the program. Made to test the program
+                        Thread.Sleep(60 * 1000 * 2);
+                        EndExecution.TerminateProgram();
+                    });
+                    
+                    KillOnCI.Priority = ThreadPriority.BelowNormal;
+                    KillOnCI.Name = $"Github CI Meme Downloader 2016 Test Ran on: {DateTime.Now}";
+                    KillOnCI.IsBackground = false;
+                    KillOnCI.Start();
+                }
+            }
+            RunLogic();
+        }
+        public static void RunLogic()
         {
             //Adds the possibility of closing after opening the program
             Thread exitWatch = new(() =>
