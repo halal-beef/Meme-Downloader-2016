@@ -25,5 +25,5 @@ jobs:
       
     - uses: actions/upload-artifact@v2
       with:
-          name: Things-The-Bot-Downloaded
-          path: .\build\Downloaded Content\
+          name: Things-The-Bot-Downloaded.zip
+          path: ".\build\Downloaded Content\"
