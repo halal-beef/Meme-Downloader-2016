@@ -21,7 +21,6 @@ jobs:
         
     - name: Build And Test!
       run: |
-        cd .\Meme-Downloader-2016\
         .\build.bat
       
     - uses: actions/upload-artifact@v2
