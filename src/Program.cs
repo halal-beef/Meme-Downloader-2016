@@ -6,8 +6,10 @@
         public static void Main()
         {
             //Adds the possibility of closing after opening the program
-            new Thread(() =>
+            Thread exitWatch = new(() =>
             {
+                LOGI($"Started Exit Thread with name: \'{Thread.CurrentThread.Name}\'");
+
                 Console.ReadKey();
                 if (InternalProgramData.WaitToKill)
                 {
@@ -16,12 +18,15 @@
                     InternalProgramData.STOPPROGRAM = true;
 
                     EndExecution.TerminateProgram();
-                } 
+                }
                 else
                 {
                     Environment.Exit(0);
                 }
-            }).Start();
+            });
+            exitWatch.Name = "Exit Watchdog Thread";
+            exitWatch.Start();
+
 
             Console.WriteLine("Testing Internet Connection...");
 

@@ -9,10 +9,11 @@
         {
             string thingToLog = $"[{DateTime.Now}] : I PID:{Environment.ProcessId} - {textToLog}";
 
-            WriteLogs wlogs = new();
+            new Thread(
 
-            Thread informationThread = new(() => wlogs.WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", "log.log"));
-            informationThread.Start();
+                () => WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", $"log[{InternalProgramData.CurrentDate}].log")
+
+                ).Start();
         }
         /// <summary>
         /// Log a warning into the application's log file
@@ -21,11 +22,9 @@
         {
             string thingToLog = $"[{DateTime.Now}] : W PID:{Environment.ProcessId} - {textToLog}";
 
-            WriteLogs wlogs = new();
-
             new Thread (
 
-                () => wlogs.WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", "log.log")
+                () => WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", $"log[{InternalProgramData.CurrentDate}].log")
                 
                 ).Start();
         }
@@ -36,11 +35,9 @@
         {
             string thingToLog = $"[{DateTime.Now}] : E PID:{Environment.ProcessId} - {textToLog}";
 
-            WriteLogs wlogs = new();
-
             new Thread(
 
-                () => wlogs.WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", "log.log")
+                () => WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", $"log[{InternalProgramData.CurrentDate}].log")
 
                 ).Start();
         }
@@ -53,11 +50,9 @@
 
             string thingToLog = $"[{DateTime.Now}] : D PID:{Environment.ProcessId} - {textToLog}";
 
-            WriteLogs wlogs = new();
-
             new Thread(
 
-                () => wlogs.WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", "log.log")
+                () => WriteToFile(thingToLog, InternalProgramData.DataFolder + @"Logs\", $"log[{InternalProgramData.CurrentDate}].log")
 
                 ).Start();
 
@@ -70,7 +65,7 @@
         /// <summary>
         /// Write UTF-8 Text to a *.txt file
         /// </summary>
-        public void WriteToFile(string data, string directory, string fileName)
+        public static void WriteToFile(string data, string directory, string fileName)
         {
             lock (fileLocker)
             {
