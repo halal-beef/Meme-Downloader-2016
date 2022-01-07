@@ -21,8 +21,8 @@ jobs:
         
     - name: Build
       id: date
-      run: chmod +x Build.sh && ./Build.sh && echo "::set-output name=today::$(date +"%d-%m-%y--%H-%M-%S")"
-      
+      run: chmod +x Build.sh && ./Build.sh && ls "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/" && echo "::set-output name=today::$(date +"%d-%m-%y--%H-%M-%S")"
+    
     - name: Upload Windows Relese and Debug
       uses: softprops/action-gh-release@v1
       with:
