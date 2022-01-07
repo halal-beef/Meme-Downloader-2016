@@ -4,8 +4,8 @@ That name is just joking :)
 
 Dependencies (handled by the program):
 
-  - ffmpeg
-  - youtube-dlp
+	- ffmpeg
+	- youtube-dlp
 
 This app downloads can download stuff from a subreddit of your choice and throws what it gets into a folder named `Downloaded Contents`, which inside has folders with the names of the subreddits of your choice.
 
@@ -13,7 +13,7 @@ This app runs 32 threads by default, and is (sometimes) VERY resource hungry on 
 
 **This app has some dependencies on Windows**: 
 
-  - taskkill
+	- taskkill
 
 ## `config.json` template
 
@@ -41,19 +41,21 @@ This are the default values of `config.json` after being created:
 
 ### **NOTES**:
 
- - ~~After restarting the program after installing the dependencies, it will fail to run, please, close it forcefully and open it back again to fix this issue~~ (Fixed)
+	- This program saves logs on `C:\Users\%USERNAME%\AppData\Local\Dottik\Meme Downloader 2016\Logs\log[LogDate].log`
+
+	- ~~After restarting the program after installing the dependencies, it will fail to run, please, close it forcefully and open it back again to fix this issue~~ (Fixed)
 
 ------------------
 
 Credits:
 
-  - Original Idea: [SmallPP420](https://github.com/SmallPP420)
+	- Original Idea: [SmallPP420](https://github.com/SmallPP420)
 
 ------------------
 
 Thanks to: 
 
-  - TeNaihi for helping me test it :D
+	- TeNaihi for helping me test it :D
 
 ------------------
 

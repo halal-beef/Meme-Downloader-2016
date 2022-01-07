@@ -10,6 +10,7 @@
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         public static void StartBot(bool modeA, int timeOut = 50)
         {
+            LOGD($"Started new bot with name: {Thread.CurrentThread.Name}.");
             bool isBot0 = false;
             try
             {
@@ -181,6 +182,7 @@
                     }
                     else
                     {
+                        LOGW($"{Thread.CurrentThread.Name} | is being rebooted");
                         throw new Exception("Bot Reboot.");
                     }
 

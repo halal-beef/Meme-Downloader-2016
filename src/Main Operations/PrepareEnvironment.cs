@@ -34,12 +34,32 @@
 
             if(totalSuccess > 0)
             {
+                LOGI("PINGs were ");
                 Console.WriteLine("There is an internet connection available.");
             }
             else
             {
-                Console.WriteLine($"There isn't an available internet connection available, please, run the program once you are connected to the internet!");
-                Environment.Exit(-1);
+                Console.WriteLine("Tests through PING failed! Trying to establish a connection with 8.8.8.8...");
+
+                try
+                {
+                    HttpResponseMessage hrm = new HttpClient().GetAsync("8.8.8.8")
+                                    .GetAwaiter()
+                                    .GetResult();
+                    
+                    hrm.EnsureSuccessStatusCode();
+
+                    LOGI("| Your PC -> Server | Pings are disabled on this router");
+
+                    Console.WriteLine($"Petition answered with HTTP code ({hrm.StatusCode})OK");
+                    Console.WriteLine("There is an internet connection available.");
+                }
+                catch
+                {
+                    LOGE("Internet connection couldn't be validated, Terminating Program...");
+                    Console.WriteLine($"There isn't an available internet connection available, please, run the program once you are connected to the internet!");
+                    Environment.Exit(-1);
+                }
             }
         }
         public static void StartBots()
@@ -84,20 +104,26 @@
 
             PingOptions pOpt = new();
             pOpt.DontFragment = true;
+
+            LOGI($"PINGing {ipAddress} with ICMP echo message: {bufferText}");
             PingReply pingReply = ping.Send(ipAddress, 10000, pingBuffer, new PingOptions(64, dontFragment: true));
+
 
             if(pingReply.Status == IPStatus.Success)
             {
                 //Ping was a success!
+                LOGI($"Response of {ipAddress} was OK");
                 return true;
             } 
             else if (pingReply.Status == IPStatus.PacketTooBig)
             {
+                LOGW($"Response of {ipAddress} was OK, but sent package was too big");
                 //Our buffer was  b i g
                 return true;
             }
             else
             {
+                LOGE($"Response of {ipAddress} was {pingReply.Status}");
                 Console.WriteLine(pingReply.Status.ToString());
                 return false;
             }

@@ -27,7 +27,9 @@
                     collectionOnProgress = true;
                     Thread.Sleep(1000);
                     Console.WriteLine("Memory Limit Reached! Garbage Collection Triggered!");
-                    
+
+                    LOGI($"Garbage Collector Triggered with {pro.WorkingSet64}; Maximum permitted at that time was {RamLimit}MB");
+
                     GC.Collect();
 
                     //Sleep for 10 secs & Add 64MB more to the RamLimit
