@@ -50,12 +50,13 @@
                 });
                 exitWatch.Name = "Exit Watchdog Thread";
                 exitWatch.Start();
-            }
 
 
-            Console.WriteLine("Testing Internet Connection...");
+
+                Console.WriteLine("Testing Internet Connection...");
 
                 PrepareEnvironment.TestConnection();
+            }
 
             if (Directory.Exists(Environment.CurrentDirectory + @"/TEMP/"))
             {
