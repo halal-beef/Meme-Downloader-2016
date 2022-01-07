@@ -56,7 +56,8 @@
 
 
             Thread.Sleep(5000);
-            Console.Clear();
+            if(!InternalProgramData.runningCi)
+                Console.Clear();
         }
         public static bool VerifyFileIntegrity(string Expectedsha256, string PathToFile)
         {

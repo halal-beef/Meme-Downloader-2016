@@ -2,7 +2,6 @@
 {
     public class Program
     {
-        private static bool _runningCi = false;
         public static void Main(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
@@ -20,7 +19,7 @@
                     KillOnCI.Name = $"Github CI Meme Downloader 2016 Test Ran on: {DateTime.Now}";
                     KillOnCI.IsBackground = false;
                     KillOnCI.Start();
-                    _runningCi = true;
+                    InternalProgramData.runningCi = true;
                 }
             }
             RunLogic();
@@ -28,7 +27,7 @@
         public static void RunLogic()
         {
             //Adds the possibility of closing after opening the program
-            if (_runningCi == false)
+            if (InternalProgramData.runningCi == false)
             {
                 Thread exitWatch = new(() =>
                 {
