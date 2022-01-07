@@ -45,7 +45,7 @@
         public string TargetSubReddit2 = "memes";
         public string TargetSubReddit3 = "crappyoffbrands";
         public string TargetSubReddit4 = "nocontextpics";
-        public string TargetSubReddit5 = "funny";
+        public string TargetSubReddit5 = "arabfunny";
         public ulong MaxRepeatTimes = 10000;
         public bool SimultaneousDownload = true;
         public int ThreadCount = 32;
