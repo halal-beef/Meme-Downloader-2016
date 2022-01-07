@@ -1,4 +1,4 @@
-name: Build `Meme Downloader 2016` For Windows
+name: Build Meme Downloader 2016 For Windows
 
 on:
   workflow_dispatch:
