@@ -35,4 +35,4 @@ mv build\Zipper.exe ..
 
 cd ..
 
-Zipper.exe -Output=Downloaded-Content.zip -LocalFile -Folder="\Downloaded Content\" 
+Zipper.exe -Output=Downloaded-Content.zip -LocalFile -Folder="Downloaded Content\" 
