@@ -7,7 +7,6 @@
         public static Object locked0 = new();
 
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
-        [LoaderOptimization(LoaderOptimization.MultiDomain)]
         public static void StartBot(bool modeA, int timeOut = 50)
         {
             LOGD($"Started new bot with name: {Thread.CurrentThread.Name}.");
