@@ -56,6 +56,7 @@
 
 
             Thread.Sleep(5000);
+
             if(!InternalProgramData.runningCi)
                 Console.Clear();
         }

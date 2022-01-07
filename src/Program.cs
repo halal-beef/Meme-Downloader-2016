@@ -11,7 +11,7 @@
                     Thread KillOnCI = new(() =>
                     {
                         //Wait 2 Minutes and kill the program. Made to test the program
-                        Thread.Sleep(60 * 1000 * 2);
+                        Thread.Sleep(30 * 1000);
                         EndExecution.TerminateProgram();
                     });
                     
