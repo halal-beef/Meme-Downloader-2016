@@ -12,7 +12,9 @@ global using Newtonsoft.Json;
 global using Newtonsoft.Json.Linq;
 
 //CUSTOM NAMESPACES
+global using Dottik.MemeDownloader;
 global using Dottik.MemeDownloader.Optimize;
 global using Dottik.MemeDownloader.Bots;
 global using Dottik.MemeDownloader.GetMedia;
 global using Dottik.MemeDownloader.Dependencies;
+global using static Dottik.Logging.Log;

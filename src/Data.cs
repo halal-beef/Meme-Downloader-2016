@@ -7,6 +7,8 @@
         
         public static int BotCount = 32;
 
+        public static readonly string ProgramName = "Meme Downloader 2016";
+        public static readonly string DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @$"\Dottik\{ProgramName}\";
         public static string TargetFolder = Environment.CurrentDirectory + @"\Shitposs\";
         public static string TargetSubReddit0 = "";
         public static string TargetSubReddit1 = ""; 
