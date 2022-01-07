@@ -26,7 +26,7 @@ mkdir Zipper\build\
 
 dotnet publish "Zipper.csproj" --output "build\" --arch x64 --os win -c release --self-contained true
 
-mv \Zipper\build\Zipper.exe ..\build\
+mv build\Zipper.exe ..\build\
 
 cd ..\build
 
