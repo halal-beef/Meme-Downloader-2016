@@ -198,11 +198,7 @@
             {
                 if (!InternalProgramData.STOPPROGRAM)
                 {
-                    if(!ex.Message.Contains("Restart") && isBot0) 
-                    {
-                        Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}");
-                    }
-                    else if(!ex.Message.Contains("Restart") && !isBot0)
+                    if(!ex.Message.Contains("Reboot")) 
                     {
                         Console.WriteLine($"Reddit rate limited {Thread.CurrentThread.Name}. Bot Terminated with error: {ex.Message}, STACK TRACE: {ex.StackTrace}, INNER EXCEPTION: {ex.InnerException}");
                     }
@@ -235,7 +231,7 @@
                     //Console.WriteLine($"{aliveBotsPercentage1}% of bots for Target1 are alive!");
 
 
-                    if (!InternalProgramData.SimultaneousDownload) {
+                    if (InternalProgramData.SimultaneousDownload) {
                         if (aliveBotsPercentage0 <= 50 && aliveBotsPercentage1 <= 50)
                         {
                             float amountToRevive0 = totalBots - aliveBots0;
@@ -248,7 +244,7 @@
                                 x.Start();
                             }
                             float amountToRevive = totalBots - aliveBots1;
-                            for (float i = amountToRevive; i < totalBots / 2; i++)
+                            for (float i = amountToRevive; i < totalBots / 2 / 2; i++)
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
                                 Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
