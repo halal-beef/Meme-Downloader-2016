@@ -235,10 +235,63 @@
                     //Console.WriteLine($"{aliveBotsPercentage1}% of bots for Target1 are alive!");
 
 
-                    if(aliveBotsPercentage0 <= 50 && aliveBotsPercentage1 <= 50)
+                    if (!InternalProgramData.SimultaneousDownload) {
+                        if (aliveBotsPercentage0 <= 50 && aliveBotsPercentage1 <= 50)
+                        {
+                            float amountToRevive0 = totalBots - aliveBots0;
+                            for (float i = amountToRevive0; i < totalBots / 2 / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                                x.Name = $"- bot n{i}";
+                                x.IsBackground = true;
+                                x.Start();
+                            }
+                            float amountToRevive = totalBots - aliveBots1;
+                            for (float i = amountToRevive; i < totalBots / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
+                                x.Name = $"- bot n{i}";
+                                x.IsBackground = true;
+                                x.Start();
+                            }
+
+                            //Console.WriteLine($"Revived bots, Total for Target0 {BotStatus.aliveBots0.Count}");
+                            //Console.WriteLine($"Revived bots, Total for Target1 {BotStatus.aliveBots1.Count}");
+                        }
+                        else if (aliveBotsPercentage0 <= 50)
+                        {
+                            float amountToRevive = totalBots - aliveBots0;
+                            for (float i = amountToRevive; i < totalBots / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                                x.Name = $"- bot n{i}";
+                                x.IsBackground = true;
+                                x.Start();
+                            }
+                            //Console.WriteLine($"Revived bots, Total for Target0 {BotStatus.aliveBots0.Count}");
+                        }
+                        else if (aliveBotsPercentage1 <= 50)
+                        {
+                            float amountToRevive = totalBots - aliveBots1;
+                            for (float i = amountToRevive; i < totalBots / 2; i++)
+                            {
+                                //Execute bots according to the ammount specified on BotCount 🥶👌
+                                Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
+                                x.Name = $"- bot n{i}";
+                                x.IsBackground = true;
+                                x.Start();
+                            }
+                            //Console.WriteLine($"Revived bots, Total for Target1 {BotStatus.aliveBots1.Count}");
+                            //Console.WriteLine($"Current Total Bot Count: {BotStatus.aliveBots0.Count + BotStatus.aliveBots1.Count}");
+
+                        } 
+                    } else
                     {
                         float amountToRevive0 = totalBots - aliveBots0;
-                        for (float i = amountToRevive0; i < totalBots / 2 / 2; i++)
+                        for (float i = amountToRevive0; i < totalBots; i++)
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
@@ -246,46 +299,6 @@
                             x.IsBackground = true;
                             x.Start();
                         }
-                        float amountToRevive = totalBots - aliveBots1;
-                        for (float i = amountToRevive; i < totalBots / 2; i++)
-                        {
-                            //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
-                            x.Name = $"- bot n{i}";
-                            x.IsBackground = true;
-                            x.Start();
-                        }
-
-                        //Console.WriteLine($"Revived bots, Total for Target0 {BotStatus.aliveBots0.Count}");
-                        //Console.WriteLine($"Revived bots, Total for Target1 {BotStatus.aliveBots1.Count}");
-                    }
-                    else if (aliveBotsPercentage0 <= 50)
-                    {
-                        float amountToRevive = totalBots - aliveBots0;
-                        for (float i = amountToRevive; i < totalBots / 2; i++)
-                        {
-                            //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
-                            x.Name = $"- bot n{i}";
-                            x.IsBackground = true;
-                            x.Start();
-                        }
-                        //Console.WriteLine($"Revived bots, Total for Target0 {BotStatus.aliveBots0.Count}");
-                    }
-                    else if (aliveBotsPercentage1 <= 50)
-                    {
-                        float amountToRevive = totalBots - aliveBots1;
-                        for (float i = amountToRevive; i < totalBots / 2; i++)
-                        {
-                            //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
-                            x.Name = $"- bot n{i}";
-                            x.IsBackground = true;
-                            x.Start();
-                        }
-                        //Console.WriteLine($"Revived bots, Total for Target1 {BotStatus.aliveBots1.Count}");
-                        //Console.WriteLine($"Current Total Bot Count: {BotStatus.aliveBots0.Count + BotStatus.aliveBots1.Count}");
-
                     }
                 }
             }

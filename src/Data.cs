@@ -17,6 +17,7 @@
 
         public static bool SimultaneousDownload = false;
         public static bool STOPPROGRAM = false;
+        public static bool WaitToKill = false;
         public static bool RestartBot = false;
 
         //public static CookieContainer CookieContainer = new();

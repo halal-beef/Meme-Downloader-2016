@@ -30,8 +30,9 @@
                     
                     GC.Collect();
 
-                    //Sleep for 10 secs 
+                    //Sleep for 10 secs & Add 64MB more to the RamLimit
                     Thread.Sleep(10000);
+                    RamLimit += 64;
                     collectionOnProgress = false;
                 }
             }

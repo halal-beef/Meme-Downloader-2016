@@ -13,9 +13,11 @@ This app runs 32 threads by default, and is (sometimes) VERY resource hungry on 
 
 **This app has some dependencies on Windows**
 
-How to make `config.josn`?
 
-This is the default `config.json` configuration:
+
+## `config.json` template
+
+This are the default values of `config.json` after being created:
 
 ```
 {
