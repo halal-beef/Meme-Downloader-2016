@@ -50,7 +50,7 @@
                                     target.Append(InternalProgramData.TargetSubReddit0);
                                 } else
                                 {
-                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
+                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
                                     target.Append(InternalProgramData.TargetSubReddit1);
                                 }
@@ -64,7 +64,7 @@
                                 }
                                 else
                                 {
-                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
+                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
                                 }
                             }
@@ -112,7 +112,7 @@
                             {
                                 GetRedditVideo.GetVideoMp4(PathToResult, data, sourceLink, usableName);
                             }
-                            else if (sourceLink != null && sourceLink.ToString().Contains("youtu.be") || sourceLink.ToString().Contains("youtube"))
+                            else if ( ( sourceLink != null && sourceLink.ToString().Contains("youtu.be") ) || sourceLink.ToString().Contains("youtube"))
                             {
                                 if (!File.Exists(sourceLink + ".mp4"))
                                 {
@@ -130,9 +130,10 @@
                                 }
                             }
                             else if (sourceLink.ToString() == null
-                                     || !sourceLink.ToString().Contains("v.redd.it")
-                                     || !sourceLink.ToString().Contains("youtu.be")
-                                     && !Result.Value<bool>("is_video"))
+                                 || !sourceLink.ToString().Contains("v.redd.it")
+                                 || !sourceLink.ToString().Contains("youtu.be")
+                                 && !Result.Value<bool>("is_video")
+                                 )
                             {
                                 //Normal Execution
                                 if (!PathToResult.ToString().Contains(".jpg") && !PathToResult.ToString().Contains(".png") && !PathToResult.ToString().Contains(".gif") && !PathToResult.ToString().Contains(".jpeg") && !PathToResult.ToString().Contains(".mp4"))

@@ -145,8 +145,6 @@
                             hrm1.Content.CopyToAsync(fs).GetAwaiter().GetResult();
                             fs.Dispose();
                             fs.Close();
-
-                        Console.WriteLine(PathToResult);
                         PathToResult.Append("VIDEO_ONLY.mp4");
 
                         lock (videoMediaLockerb)
