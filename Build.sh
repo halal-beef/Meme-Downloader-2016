@@ -5,7 +5,7 @@ dotnet publish "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/Meme
 dotnet publish "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/Meme Downloader 2016.csproj" --output "build-debug\\" --arch x64 --os win -c debug --self-contained true # win build
 
 # Move debug build
-move "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build-debug/Meme Downloader 2016.exe" "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/[DEBUG] Meme Downloader 2016.exe"
+mv "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build-debug/Meme Downloader 2016.exe" "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/[DEBUG] Meme Downloader 2016.exe"
 
 echo "Build Folder Contents:"
 ls "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build"
