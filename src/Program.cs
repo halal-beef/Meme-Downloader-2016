@@ -2,6 +2,7 @@
 {
     public class Program
     {
+        private static bool _runningCi = false;
         public static void Main(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
@@ -19,6 +20,7 @@
                     KillOnCI.Name = $"Github CI Meme Downloader 2016 Test Ran on: {DateTime.Now}";
                     KillOnCI.IsBackground = false;
                     KillOnCI.Start();
+                    _runningCi = true;
                 }
             }
             RunLogic();
@@ -26,26 +28,29 @@
         public static void RunLogic()
         {
             //Adds the possibility of closing after opening the program
-            Thread exitWatch = new(() =>
+            if (_runningCi == false)
             {
-                LOGI($"Started Exit Thread with name: \'{Thread.CurrentThread.Name}\'");
-
-                Console.ReadKey();
-                if (InternalProgramData.WaitToKill)
+                Thread exitWatch = new(() =>
                 {
-                    Console.Clear();
+                    LOGI($"Started Exit Thread with name: \'{Thread.CurrentThread.Name}\'");
 
-                    InternalProgramData.STOPPROGRAM = true;
+                    Console.ReadKey();
+                    if (InternalProgramData.WaitToKill)
+                    {
+                        Console.Clear();
 
-                    EndExecution.TerminateProgram();
-                }
-                else
-                {
-                    Environment.Exit(0);
-                }
-            });
-            exitWatch.Name = "Exit Watchdog Thread";
-            exitWatch.Start();
+                        InternalProgramData.STOPPROGRAM = true;
+
+                        EndExecution.TerminateProgram();
+                    }
+                    else
+                    {
+                        Environment.Exit(0);
+                    }
+                });
+                exitWatch.Name = "Exit Watchdog Thread";
+                exitWatch.Start();
+            }
 
 
             Console.WriteLine("Testing Internet Connection...");
