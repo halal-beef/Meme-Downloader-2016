@@ -18,16 +18,13 @@ echo 'Executing Meme Downloader 2016 in CI mode'
 
 echo 'Compiling Zipper.exe and making all downloaded content onto a zip!'
 
-mkdir ZipperSRC\
-mkdir ZipperSRC\build\
-
-cd .\ZipperSRC\
-
 git clone https://github.com/usrDottik/Zipper.git
 
-dotnet publish "Zipper.csproj" --output "build\\" --arch x64 --os win -c release --self-contained true
+mkdir Zipper\build\
 
-mv \ZipperSRC\build\Zipper.exe ..\build\
+dotnet publish "Zipper.csproj" --output "build\" --arch x64 --os win -c release --self-contained true
+
+mv \Zipper\build\Zipper.exe ..\build\
 
 cd ..\build
 
