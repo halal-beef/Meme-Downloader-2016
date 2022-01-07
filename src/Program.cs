@@ -1,8 +1,7 @@
 ﻿namespace Dottik.MemeDownloader
-{
+{ 
     public class Program
-    {
-
+    {   
         public static void Main()
         {
             //Adds the possibility of closing after opening the program
@@ -62,7 +61,7 @@
                 Console.WriteLine("Verifying Install...");
                 try
                 {
-                    string
+                    const string
                         ytdlpsha256 = "1A34F627CA88251BE6D17940F026F6A5B8AAAF0AA32DD60DEEC3020F81950E67",
                        ffmpegsha256 = "436844A3ECF9B2ECC13E57B2B5D000ADBB6FEA6FE99C7D5921C99284A91C50DC";
 
@@ -77,7 +76,7 @@
                 }
                 catch
                 {
-                    Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
+                    Console.WriteLine("Some program dependencies are missing! Redownloading them...");
                     DependencyManagment.GETWindowsDepedencies();
                 }
             }
@@ -135,17 +134,17 @@
 
             Console.WriteLine("Making Dirs...");
 
-            List<string> folders = new();
+                StringBuilder folders = new(); // Use | as a Separator
 
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/");
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit0}"); 
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit1}"); 
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit2}");
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit3}");
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit4}");
-                folders.Add(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit5}");
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/|");
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit0}/|"); 
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit1}/|"); 
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit2}/|");
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit3}/|");
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit4}/|");
+                    folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit5}/|");
 
-            PrepareEnvironment.CreateFolders(folders);
+                    PrepareEnvironment.CreateFolders(folders);
 
 
             Console.WriteLine("Starting Hell! \n\nNOTE N1: Don't worry if you don't see any output on this console, that is because the program is finding a lot of repetitions and it isn't logging them :)");

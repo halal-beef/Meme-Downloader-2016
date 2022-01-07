@@ -40,7 +40,7 @@
             while (getFFMPEG.IsAlive || getYTDLP.IsAlive)
             {
                 Console.Write('.');
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
 
             Console.Write("\nDone! Proceeding with program execution in 5 seconds");
@@ -72,15 +72,18 @@
 
                 if (Expectedsha256 == stringObjHash)
                 {
+                    LOGI($"Hash for file \"{PathToFile}\" is the same as the expected \"{Expectedsha256}\"");
                     return true;
                 }
                 else
                 {
+                    LOGW($"Hash for file \"{PathToFile}\" is different than the expected \"{Expectedsha256}\"");
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                LOGE($"Fail Calculating Hash for file \"{PathToFile}\". Exception Message: {ex.Message}");
                 return false;
             }
         }

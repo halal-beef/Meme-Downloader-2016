@@ -6,35 +6,49 @@
         {
             Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ';' + Environment.CurrentDirectory + @"/Dependencies/;");
         }
-        public static void CreateFolders(List<string> paths)
+        /// <summary>
+        /// Creates a lots of folders in one go
+        /// </summary>
+        /// <param name="paths">The paths made into a sole StringBuilder, separate them using a | at the end of the path</param>
+        public static void CreateFolders(StringBuilder paths)
         {
-            foreach (string path in paths)
+            string[] folders = paths.ToString().Split('|');
+            
+            for (int i = 0; i < folders.Length; i++)
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(folders[i]);
             }
         }
         public static void TestConnection()
         {
             string[] pingDeez = {"1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"};
-            List<bool> pingResult = new();
 
-            int totalSuccess = 0; 
+            IPAddress[] objectives = new IPAddress[4];
+            bool[] pingResult = new bool[4];
 
-            foreach (string ip in pingDeez)
+            int totalSuccess = 0;
+
+            for (int i = 0; i < pingResult.Length; i++)
             {
-                Console.WriteLine($"Pinging {IPAddress.Parse(ip)}...");
-                pingResult.Add(PingAddress(IPAddress.Parse(ip)));
+                objectives.SetValue(IPAddress.Parse(pingDeez[i]), i);
+                Console.WriteLine($"Pinging {objectives[i]}...");
+                pingResult.SetValue(PingAddress(objectives[i]), i);
             }
 
-            foreach (bool success in pingResult)
+            for (int i = 0; i < pingResult.Length; i++)
             {
-                if(success)
+                if (pingResult[i] == true)
+                {
                     totalSuccess++;
+
+                    if(totalSuccess > 2)
+                        break;
+                }
             }
 
             if(totalSuccess > 0)
             {
-                LOGI("PINGs were ");
+                LOGI("PING/s were a Success!");
                 Console.WriteLine("There is an internet connection available.");
             }
             else
@@ -44,8 +58,8 @@
                 try
                 {
                     HttpResponseMessage hrm = new HttpClient().GetAsync("8.8.8.8")
-                                    .GetAwaiter()
-                                    .GetResult();
+                                                              .GetAwaiter()
+                                                              .GetResult();
                     
                     hrm.EnsureSuccessStatusCode();
 
@@ -86,7 +100,7 @@
             }
             else
             {
-                for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
+                for (int i = 0; i < InternalProgramData.BotCount; i++)
                 {
                     //Execute bots according to the ammount specified on BotCount 🥶👌
                     Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));

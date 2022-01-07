@@ -11,7 +11,7 @@
 
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
         #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        public static void GetVideoMp4(string PathToResult, string data, string sourceLink, string usableName)
+        public static void GetVideoMp4(StringBuilder PathToResult, StringBuilder data, StringBuilder sourceLink, StringBuilder usableName)
         {
             Random rand = new();
 
@@ -23,7 +23,7 @@
                      videoAvailable = true;
                 var result0 = JObject.Parse(
 
-                JArray.Parse(data)[0]["data"]["children"][0]["data"]["secure_media"]["reddit_video"].ToString()
+                JArray.Parse(data.ToString())[0]["data"]["children"][0]["data"]["secure_media"]["reddit_video"].ToString()
 
                 );
                 string VideoLink = "";
@@ -85,7 +85,7 @@
                                 () =>
                                 MergeAudioAndVideo.UseFFMPEG(
                                 Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4",
-                                Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult + ".mp4", sourceLink));
+                                Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult + ".mp4", sourceLink.ToString()));
                             encoder.IsBackground = true;
                             encoder.Start();
 
@@ -121,10 +121,10 @@
 
                         lock (audioMediaLockerb)
                         {
-                            PathToResult += "AUDIO_ONLY";
+                            PathToResult.Append("AUDIO_ONLY.mp4");
                             Thread audioEncoder = new(
                                 () =>
-                                MergeAudioAndVideo.UseFFMPEG(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4", PathToResult + ".mp3", sourceLink));
+                                MergeAudioAndVideo.UseFFMPEG(Environment.CurrentDirectory + "/TEMP/" + "AUDIOPART." + usableName + @".mp4", PathToResult.ToString() + ".mp3", sourceLink.ToString()));
                             audioEncoder.IsBackground = true;
                             audioEncoder.Start();
 
@@ -147,16 +147,16 @@
                             fs.Close();
 
                         Console.WriteLine(PathToResult);
-                        PathToResult += "VIDEO_ONLY.mp4";
+                        PathToResult.Append("VIDEO_ONLY.mp4");
 
                         lock (videoMediaLockerb)
                         {
-                            File.Move(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult, true);
+                            File.Move(Environment.CurrentDirectory + "/TEMP/" + "VIDEOPART." + usableName + @".mp4", PathToResult.ToString(), true);
                         }
                     }
                 } else
                 {
-                    ProcessOptimizer.AddToBlacklist(sourceLink);
+                    ProcessOptimizer.AddToBlacklist(sourceLink.ToString());
                 }
             }
             else

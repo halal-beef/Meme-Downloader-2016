@@ -77,7 +77,6 @@
                 using StreamWriter sw = File.AppendText(finalPath);
 
                 sw.WriteLine(data);
-                sw.Flush();
                 sw.Dispose();
                 sw.Close();
             }

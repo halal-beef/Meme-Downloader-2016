@@ -7,7 +7,7 @@
         public static Object locked0 = new();
 
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
-        #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+        [LoaderOptimization(LoaderOptimization.MultiDomain)]
         public static void StartBot(bool modeA, int timeOut = 50)
         {
             LOGD($"Started new bot with name: {Thread.CurrentThread.Name}.");
@@ -38,7 +38,7 @@
                         
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         bool requestSuccess = false, blacklisted = false;
-                        string data = "", target = "";
+                        StringBuilder data = new(""), target = new("");
 
                         while (!requestSuccess)
                         {
@@ -46,26 +46,26 @@
                             {
                                 if (modeA)
                                 {
-                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult();
+                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
-                                    target = InternalProgramData.TargetSubReddit0;
+                                    target.Append(InternalProgramData.TargetSubReddit0);
                                 } else
                                 {
-                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult();
+                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
-                                    target = InternalProgramData.TargetSubReddit1;
+                                    target.Append(InternalProgramData.TargetSubReddit1);
                                 }
                             }
                             catch
                             {
                                 if (modeA)
                                 {
-                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult();
+                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
                                 }
                                 else
                                 {
-                                    data = new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult();
+                                    data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
                                 }
                             }
@@ -75,7 +75,7 @@
                         {
                             Result = JObject.Parse(
 
-                                JArray.Parse(data)[0]["data"]["children"][0]["data"].ToString()
+                                JArray.Parse(data.ToString())[0]["data"]["children"][0]["data"].ToString()
 
                                 );
                         }
@@ -83,25 +83,24 @@
                         {
                             throw new Exception("Error Parsing JSON!");
                         }
-                        string usableName = "", sourceLink = "";
+                        StringBuilder usableName = new(""), sourceLink = new("");
 
                         try
                         {
-                            usableName = Result["url_overridden_by_dest"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
-                            sourceLink = Result.Value<string>("url_overridden_by_dest");
+                            usableName.Append(Result["url_overridden_by_dest"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
+                            sourceLink.Append(Result.Value<string>("url_overridden_by_dest"));
                         }
                         catch
                         {
-                            usableName = Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '[');
-                            sourceLink = Result["url"].ToString();
+                            usableName.Append(Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
+                            sourceLink.Append(Result["url"].ToString());
                         }
 
-                        string PathToResult = Environment.CurrentDirectory + @"/Downloaded Content/" + @$"/{target}/" + usableName;
+                        StringBuilder PathToResult = new(Environment.CurrentDirectory + @"/Downloaded Content/" + @$"/{target}/" + usableName);
 
-                        
-                        foreach (string BlackListedURL in BotInformation.BlackListed)
+                        for (int i = 0; i < BotInformation.BlackListed.Count; i++)
                         {
-                            if (sourceLink == BlackListedURL)
+                            if (sourceLink.ToString() == BotInformation.BlackListed[i])
                             {
                                 blacklisted = true;
                                 Console.WriteLine($"{Thread.CurrentThread.Name}; Tried to download a blacklisted URL.");
@@ -110,11 +109,11 @@
 
                         if (!blacklisted)
                         {
-                            if (sourceLink != null && sourceLink.Contains("v.redd.it") && Result.Value<bool>("is_video"))
+                            if (sourceLink != null && sourceLink.ToString().Contains("v.redd.it") && Result.Value<bool>("is_video"))
                             {
                                 GetRedditVideo.GetVideoMp4(PathToResult, data, sourceLink, usableName);
                             }
-                            else if (sourceLink != null && sourceLink.Contains("youtu.be") || sourceLink.Contains("youtube"))
+                            else if (sourceLink != null && sourceLink.ToString().Contains("youtu.be") || sourceLink.ToString().Contains("youtube"))
                             {
                                 if (!File.Exists(sourceLink + ".mp4"))
                                 {
@@ -124,31 +123,34 @@
 
                                     YTDLP.VideoLink = sourceLink;
 
-                                    YTDLP.GetVideoAsMP4(PathToResult);
+                                    YTDLP.GetVideoAsMP4(PathToResult.ToString());
                                 }
                                 else
                                 {
                                     InternalProgramData.TimesRepeated++;
                                 }
                             }
-                            else if (sourceLink == null || !sourceLink.Contains("v.redd.it") || !sourceLink.Contains("youtu.be") && !Result.Value<bool>("is_video"))
+                            else if (sourceLink.ToString() == null
+                                     || !sourceLink.ToString().Contains("v.redd.it")
+                                     || !sourceLink.ToString().Contains("youtu.be")
+                                     && !Result.Value<bool>("is_video"))
                             {
                                 //Normal Execution
-                                if (!PathToResult.Contains(".jpg") && !PathToResult.Contains(".png") && !PathToResult.Contains(".gif") && !PathToResult.Contains(".jpeg") && !PathToResult.Contains(".mp4"))
+                                if (!PathToResult.ToString().Contains(".jpg") && !PathToResult.ToString().Contains(".png") && !PathToResult.ToString().Contains(".gif") && !PathToResult.ToString().Contains(".jpeg") && !PathToResult.ToString().Contains(".mp4"))
                                 {
-                                    PathToResult += ".htm";
+                                    PathToResult.Append(".htm");
                                 }
 
 
-                                if (!File.Exists(PathToResult))
+                                if (!File.Exists(PathToResult.ToString()))
                                 {
                                     try
                                     {
-                                        using FileStream fs = File.Create(PathToResult);
+                                        using FileStream fs = File.Create(PathToResult.ToString());
                                         HttpClient httpClient = new(InternalProgramData.handler);
                                         HttpResponseMessage hrm;
 
-                                        hrm = httpClient.GetAsync(sourceLink).GetAwaiter().GetResult();
+                                        hrm = httpClient.GetAsync(sourceLink.ToString()).GetAwaiter().GetResult();
 
                                         try
                                         {

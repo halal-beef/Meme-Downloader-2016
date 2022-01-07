@@ -2,9 +2,7 @@
 {
     internal class YouTubeDLP
     {
-
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public string VideoLink { get; set; }
+        public StringBuilder VideoLink { get; set; } = new("");
         private static Object lockytdlp = new();
         public void GetVideoAsMP4(string OutputPath)
         {
