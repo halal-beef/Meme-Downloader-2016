@@ -22,24 +22,22 @@
         }
         public static void ApplyConfigs(Configurations configs)
         {
-            InternalProgramData.BotCount = configs.ThreadCount;
-
+            if (!InternalProgramData.runningCi)
+            {
+                InternalProgramData.MaxRepeatTimes = configs.MaxRepeatTimes;
+                InternalProgramData.BotCount = configs.ThreadCount;
+            }
+            else
+            {
+                InternalProgramData.MaxRepeatTimes = 1000;
+                InternalProgramData.BotCount = 128;
+            }
             InternalProgramData.TargetSubReddit0 = configs.TargetSubReddit0;
             InternalProgramData.TargetSubReddit1 = configs.TargetSubReddit1;
             InternalProgramData.TargetSubReddit2 = configs.TargetSubReddit2;
             InternalProgramData.TargetSubReddit3 = configs.TargetSubReddit3;
             InternalProgramData.TargetSubReddit4 = configs.TargetSubReddit4;
             InternalProgramData.TargetSubReddit5 = configs.TargetSubReddit5;
-
-
-            if (!InternalProgramData.runningCi)
-            {
-                InternalProgramData.MaxRepeatTimes = configs.MaxRepeatTimes;
-            } 
-            else
-            {
-                InternalProgramData.MaxRepeatTimes = 100;
-            }
             InternalProgramData.SimultaneousDownload = configs.SimultaneousDownload;
         }
     }
