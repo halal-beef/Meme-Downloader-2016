@@ -31,8 +31,15 @@
             InternalProgramData.TargetSubReddit4 = configs.TargetSubReddit4;
             InternalProgramData.TargetSubReddit5 = configs.TargetSubReddit5;
 
-            InternalProgramData.MaxRepeatTimes = configs.MaxRepeatTimes;
 
+            if (!InternalProgramData.runningCi)
+            {
+                InternalProgramData.MaxRepeatTimes = configs.MaxRepeatTimes;
+            } 
+            else
+            {
+                InternalProgramData.MaxRepeatTimes = 100;
+            }
             InternalProgramData.SimultaneousDownload = configs.SimultaneousDownload;
         }
     }
