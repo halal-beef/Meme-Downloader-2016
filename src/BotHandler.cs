@@ -13,18 +13,19 @@
             bool isBot0 = false;
             try
             {
-                if (modeA) {
+                if (modeA) 
+                {
                     isBot0 = true;
                     lock (locked)
                     {
-                        BotInformation.aliveBots0.Add(true);
+                        BotInformation.aliveBots0++;
                     }
                 } 
-                else if (!modeA) 
+                else
                 {
                     lock (locked0)
                     {
-                        BotInformation.aliveBots1.Add(true);
+                        BotInformation.aliveBots1++;
                     } 
                 }
                 Random rand = new();
@@ -191,11 +192,11 @@
                 }
                 if (isBot0) {
 
-                    BotInformation.aliveBots0.RemoveAt(0);
+                    BotInformation.aliveBots0--;
                 } 
                 else
                 {
-                    BotInformation.aliveBots1.RemoveAt(0);
+                    BotInformation.aliveBots1--;
                 }
             }
             catch (Exception ex)
@@ -225,8 +226,8 @@
                 lock (botRespawnLocker)
                 {
                     float totalBots = InternalProgramData.BotCount,
-                          aliveBots0 = BotInformation.aliveBots0.Count,
-                          aliveBots1 = BotInformation.aliveBots1.Count;
+                          aliveBots0 = BotInformation.aliveBots0--,
+                          aliveBots1 = BotInformation.aliveBots1;
 
                     float aliveBotsPercentage0 = aliveBots0 / totalBots * 100,
                           aliveBotsPercentage1 = aliveBots1 / totalBots * 100;

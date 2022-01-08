@@ -88,8 +88,6 @@
                 DependencyManagment.VerifyInstall();
             }
 
-            Console.WriteLine("Loading Configurations...");
-
             if (!File.Exists(Environment.CurrentDirectory + @"\config.json"))
             {
                 Console.WriteLine("Configuration file does not exist, using default configuration and creating one...");
@@ -98,42 +96,42 @@
             }
             else
             {
+                Console.WriteLine("Loading Configurations...");
                 ConfigurationManager.ApplyConfigs(ConfigurationManager.LoadConfigs());
             }
 
-            Console.WriteLine("Loading blacklist...");
-
             if (!File.Exists(Environment.CurrentDirectory + @"\blacklist.json"))
             {
-                Console.WriteLine("There isn't a blacklist yet.");
+                Console.WriteLine("There isn't a blacklist available.");
             }
             else
             {
+                Console.WriteLine("Loading blacklist...");
                 LoadBlackList.ApplyBlacklist();
             }
 
             Console.WriteLine(
 
                     "\nConfigurations applied:\n" +
-                    "\t{\n" +
+                    "{\n" +
                 
-                    $"\t\tThreads: {InternalProgramData.BotCount}\n" +
+                    $"\tThreads: {InternalProgramData.BotCount}\n" +
                    
-                    $"\t\tMax Repeats Allowed Until Change of Subreddit: {InternalProgramData.MaxRepeatTimes}\n" +
+                    $"\tMax Repeats Allowed Until Change of Subreddit: {InternalProgramData.MaxRepeatTimes}\n" +
 
-                    $"\t\tTarget Subreddit (n1): {InternalProgramData.TargetSubReddit0}\n" +
+                    $"\tTarget Subreddit (n1): {InternalProgramData.TargetSubReddit0}\n" +
+                  
+                    $"\tTarget Subreddit (n2): {InternalProgramData.TargetSubReddit1}\n" +
+
+                    $"\tTarget Subreddit (n3): {InternalProgramData.TargetSubReddit2}\n" +
                     
-                    $"\t\tTarget Subreddit (n2): {InternalProgramData.TargetSubReddit1}\n" +
-
-                    $"\t\tTarget Subreddit (n3): {InternalProgramData.TargetSubReddit2}\n" +
+                    $"\tTarget Subreddit (n4): {InternalProgramData.TargetSubReddit3}\n" +
                     
-                    $"\t\tTarget Subreddit (n4): {InternalProgramData.TargetSubReddit3}\n" +
-                    
-                    $"\t\tTarget Subreddit (n5): {InternalProgramData.TargetSubReddit4}\n" +
+                    $"\tTarget Subreddit (n5): {InternalProgramData.TargetSubReddit4}\n" +
 
-                    $"\t\tTarget Subreddit (n6): {InternalProgramData.TargetSubReddit5}\n" +
+                    $"\tTarget Subreddit (n6): {InternalProgramData.TargetSubReddit5}\n" +
 
-                    "\t}\n"  );
+                    "}\n"  );
 
             Console.WriteLine("Preparing Environment...");
 
@@ -151,7 +149,7 @@
                     folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit4}/|");
                     folders.Append(Environment.CurrentDirectory + $"/Downloaded Content/{InternalProgramData.TargetSubReddit5}/");
 
-                    PrepareEnvironment.CreateFolders(folders);
+                PrepareEnvironment.CreateFolders(folders);
 
 
             Console.WriteLine("Starting Hell! \n\nNOTE N1: Don't worry if you don't see any output on this console, that is because the program is finding a lot of repetitions and it isn't logging them :)");

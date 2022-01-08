@@ -11,6 +11,7 @@
         {
             while (!InternalProgramData.STOPPROGRAM)
             {
+                Thread.Sleep(10000);
                 Process pro = Process.GetCurrentProcess();
                 bool shouldCollect = false;
 

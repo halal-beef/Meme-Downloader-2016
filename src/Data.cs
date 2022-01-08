@@ -37,8 +37,8 @@
     internal struct BotInformation
     {
         public static List<string> BlackListed = new();
-        public static List<bool> aliveBots0 = new();
-        public static List<bool> aliveBots1 = new();
+        public static long aliveBots0 = 0;
+        public static long aliveBots1 = 0;
     }
     internal struct Configurations 
     {
