@@ -24,7 +24,7 @@
             }
             RunLogic();
         }
-        public static void RunLogic()
+        private static void RunLogic()
         {
             //Adds the possibility of closing after opening the program
             if (InternalProgramData.runningCi == false)
@@ -85,26 +85,7 @@
             else 
             {
                 Console.WriteLine("Verifying Install...");
-                try
-                {
-                    const string
-                        ytdlpsha256 = "1A34F627CA88251BE6D17940F026F6A5B8AAAF0AA32DD60DEEC3020F81950E67",
-                       ffmpegsha256 = "436844A3ECF9B2ECC13E57B2B5D000ADBB6FEA6FE99C7D5921C99284A91C50DC";
-
-                    bool ytdlpOK = DependencyManagment.VerifyFileIntegrity(ytdlpsha256, Environment.CurrentDirectory + @"/Dependencies/yt-dlp.exe");
-                    bool ffmpegOK = DependencyManagment.VerifyFileIntegrity(ffmpegsha256, Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe");
-     
-                    if (!ytdlpOK || !ffmpegOK)
-                    {
-                        Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
-                        DependencyManagment.GETWindowsDepedencies();
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Some program dependencies are missing! Redownloading them...");
-                    DependencyManagment.GETWindowsDepedencies();
-                }
+                DependencyManagment.VerifyInstall();
             }
 
             Console.WriteLine("Loading Configurations...");

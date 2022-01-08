@@ -29,8 +29,8 @@
             }
             else
             {
-                InternalProgramData.MaxRepeatTimes = 1000;
-                InternalProgramData.BotCount = 128;
+                InternalProgramData.MaxRepeatTimes = 10000;
+                InternalProgramData.BotCount = 512;
             }
             InternalProgramData.TargetSubReddit0 = configs.TargetSubReddit0;
             InternalProgramData.TargetSubReddit1 = configs.TargetSubReddit1;
