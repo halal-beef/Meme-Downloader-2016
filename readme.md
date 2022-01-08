@@ -32,7 +32,7 @@ This are the default values of `config.json` after being created:
 	"ThreadCount": 32
 }
 ```
-**TargetSubreddit(0, 1, 2, 3, 4, 6)**: This are the subreddits from where you want to get posts from <br>
+**TargetSubreddit(0, 1, 2, 3, 4, 5)**: This are the subreddits from where you want to get posts from <br>
 **MaxTimesRepeated**: This is the max amount of times the bot has to get a "It already exists" to change and download from another subreddit<br>
 **SimultaneousDownload**: This enables the program to download from two subreddits simultaneously<br>
 **ThreadCount**: This is how many bots will run simultaneously, going over 32 is normally overkill
