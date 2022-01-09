@@ -103,13 +103,13 @@
                         try
                         {
                             //Avoid Illegal Names
-                            usableName.Append(Result["title"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
+                            usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalChars));
                             sourceLink.Append(Result.Value<string>("url_overridden_by_dest"));
                         }
                         catch
                         {
                             //Avoid Illegal Names
-                            usableName.Append(Result["title"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
+                            usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalChars));
                             sourceLink.Append(Result["url"].ToString());
                         }
 

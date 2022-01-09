@@ -2,6 +2,8 @@
 {
     internal struct InternalProgramData
     {
+        public static char[] illegalChars = { '?', '|', ':', '<', '>', '/', '*', @"\".ToCharArray()[0] };
+
         public static ulong MaxRepeatTimes = 0;
         public static ulong TimesRepeated = 0;
         
