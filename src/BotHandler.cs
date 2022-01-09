@@ -55,11 +55,17 @@
                             {
                                 if (modeA)
                                 {
+                                    if (!Thread.CurrentThread.Name.Contains(InternalProgramData.TargetSubReddit0))
+                                        Thread.CurrentThread.Name = $"- /r/{InternalProgramData.TargetSubReddit0} | " + Thread.CurrentThread.Name.Split('|')[1];
+                                    
                                     data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit0}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
                                     target.Append(InternalProgramData.TargetSubReddit0);
                                 } else
                                 {
+                                    if (!Thread.CurrentThread.Name.Contains(InternalProgramData.TargetSubReddit1))
+                                        Thread.CurrentThread.Name = $"- /r/{InternalProgramData.TargetSubReddit1} | " + Thread.CurrentThread.Name.Split('|')[1];
+
                                     data.Append(new HttpClient(InternalProgramData.handler).GetStringAsync($"http://reddit.com/r/{InternalProgramData.TargetSubReddit1}/random.json").GetAwaiter().GetResult());
                                     requestSuccess = true;
                                     target.Append(InternalProgramData.TargetSubReddit1);
@@ -96,12 +102,14 @@
 
                         try
                         {
-                            usableName.Append(Result["title"].ToString());
+                            //Avoid Illegal Names
+                            usableName.Append(Result["title"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
                             sourceLink.Append(Result.Value<string>("url_overridden_by_dest"));
                         }
                         catch
                         {
-                            usableName.Append(Result["title"].ToString());
+                            //Avoid Illegal Names
+                            usableName.Append(Result["title"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
                             sourceLink.Append(Result["url"].ToString());
                         }
 
@@ -254,7 +262,7 @@
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
                                 Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
-                                x.Name = $"- bot n{i}";
+                                x.Name = $"- | bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
                             }
@@ -263,7 +271,7 @@
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
                                 Thread x = new(() => BotHandle.StartBot(false, (int)i * 2));
-                                x.Name = $"- bot n{i}";
+                                x.Name = $"- | bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
                             }
@@ -278,7 +286,7 @@
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
                                 Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
-                                x.Name = $"- bot n{i}";
+                                x.Name = $"- | bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
                             }
@@ -291,7 +299,7 @@
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
                                 Thread x = new(() => BotHandle.StartBot(false, (int)i * 2));
-                                x.Name = $"- bot n{i}";
+                                x.Name = $"- | bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
                             }
@@ -307,7 +315,7 @@
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
                             Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
-                            x.Name = $"- bot n{i}";
+                            x.Name = $"- | bot n{i}";
                             x.IsBackground = true;
                             x.Start();
                         }
