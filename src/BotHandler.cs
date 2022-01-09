@@ -23,7 +23,7 @@
                 if (modeA) 
                 {
                     isBot0 = true;
-                    Thread.CurrentThread.Name = "-" + $"/r/{InternalProgramData.TargetSubReddit0}" + Thread.CurrentThread.Name.Split('-')[1];
+                    Thread.CurrentThread.Name = $"- /r/{InternalProgramData.TargetSubReddit0}" + Thread.CurrentThread.Name.Split('-')[1];
                     lock (locked)
                     {
                         BotInformation.aliveBots0++;
