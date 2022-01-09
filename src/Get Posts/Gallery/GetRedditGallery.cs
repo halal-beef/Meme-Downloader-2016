@@ -114,13 +114,13 @@
 
                         fs0.Dispose();
                         fs0.Close();
-                        Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded Gallery from {sourceLink}");
                     }
                     else
                     {
                         InternalProgramData.TimesRepeated++;
                     }
                 }
+                Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded Gallery from {sourceLink}");
             }
         }
     }

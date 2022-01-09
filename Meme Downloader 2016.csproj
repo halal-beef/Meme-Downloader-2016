@@ -17,11 +17,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <Compile Remove="src\Main Operations\NewFolder\**" />
+    <EmbeddedResource Remove="src\Main Operations\NewFolder\**" />
+    <None Remove="src\Main Operations\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\Main Operations\NewFolder\" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>
