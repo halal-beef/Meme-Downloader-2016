@@ -2,12 +2,19 @@
 {
     internal class BotHandler
     {
-        public static Object locked = new();
-        public static Object botRespawnLocker = new();
-        public static Object locked0 = new();
+        //Web Related
+        private readonly HttpClient _httpClient = new(InternalProgramData.handler);
+        private HttpResponseMessage _hrm = new();
+
+        //Locks
+        private static readonly Object locked = new();
+        private static readonly Object botRespawnLocker = new();
+        private static readonly Object locked0 = new();
+        private static readonly Object lockGallery = new();
+
 
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
-        public static void StartBot(bool modeA, int timeOut = 50)
+        public void StartBot(bool modeA, int timeOut = 50)
         {
             LOGD($"Started new bot with name: {Thread.CurrentThread.Name}.");
             bool isBot0 = false;
@@ -16,6 +23,7 @@
                 if (modeA) 
                 {
                     isBot0 = true;
+                    Thread.CurrentThread.Name = "-" + $"/r/{InternalProgramData.TargetSubReddit0}" + Thread.CurrentThread.Name.Split('-')[1];
                     lock (locked)
                     {
                         BotInformation.aliveBots0++;
@@ -23,6 +31,7 @@
                 } 
                 else
                 {
+                    Thread.CurrentThread.Name = $"- /r/{InternalProgramData.TargetSubReddit1}" + Thread.CurrentThread.Name.Split('-')[1];
                     lock (locked0)
                     {
                         BotInformation.aliveBots1++;
@@ -35,7 +44,7 @@
 
                     if (!InternalProgramData.RestartBot && !OptimizeMemory.collectionOnProgress && !InternalProgramData.STOPPROGRAM)
                     {
-                        
+                       
                         Thread.Sleep(timeOut + rand.Next(0, timeOut));
                         bool requestSuccess = false, blacklisted = false;
                         StringBuilder data = new(""), target = new("");
@@ -87,12 +96,12 @@
 
                         try
                         {
-                            usableName.Append(Result["url_overridden_by_dest"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
+                            usableName.Append(Result["title"].ToString());
                             sourceLink.Append(Result.Value<string>("url_overridden_by_dest"));
                         }
                         catch
                         {
-                            usableName.Append(Result["url"].ToString().Replace('/', '_').Replace(':', '.').Replace('?', '['));
+                            usableName.Append(Result["title"].ToString());
                             sourceLink.Append(Result["url"].ToString());
                         }
 
@@ -107,13 +116,23 @@
                             }
                         }
 
-                        if (!blacklisted)
+                        if (!blacklisted && sourceLink != null)
                         {
-                            if (sourceLink != null && sourceLink.ToString().Contains("v.redd.it") && Result.Value<bool>("is_video"))
+                            if (sourceLink.ToString().Contains("gallery"))
+                            {
+                                lock (lockGallery)
+                                {
+                                    FormattedLinks formattedLinks = GetRedditGallery.FormatLinks(data.ToString());
+
+                                    GetRedditGallery.GetGallery(PathToResult.ToString(), sourceLink.ToString(), formattedLinks, _httpClient);
+                                }
+                            }
+                            else if (sourceLink.ToString().Contains("v.redd.it") && Result.Value<bool>("is_video"))
                             {
                                 GetRedditVideo.GetVideoMp4(PathToResult, data, sourceLink, usableName);
                             }
-                            else if ( ( sourceLink != null && sourceLink.ToString().Contains("youtu.be") ) || sourceLink.ToString().Contains("youtube"))
+                            else if (sourceLink.ToString().Contains("youtu.be")
+                                 || sourceLink.ToString().Contains("youtube"))
                             {
                                 if (!File.Exists(sourceLink + ".mp4"))
                                 {
@@ -130,8 +149,8 @@
                                     InternalProgramData.TimesRepeated++;
                                 }
                             }
-                            else if (sourceLink.ToString() == null
-                                 || !sourceLink.ToString().Contains("v.redd.it")
+
+                            else if (!sourceLink.ToString().Contains("v.redd.it")
                                  || !sourceLink.ToString().Contains("youtu.be")
                                  && !Result.Value<bool>("is_video")
                                  )
@@ -148,22 +167,12 @@
                                     try
                                     {
                                         using FileStream fs = File.Create(PathToResult.ToString());
-                                        HttpClient httpClient = new(InternalProgramData.handler);
-                                        HttpResponseMessage hrm;
 
-                                        hrm = httpClient.GetAsync(sourceLink.ToString()).GetAwaiter().GetResult();
+                                        _hrm = _httpClient.GetAsync(sourceLink.ToString()).GetAwaiter().GetResult();
 
-                                        try
-                                        {
-                                            hrm.EnsureSuccessStatusCode();
-                                        }
-                                        catch
-                                        {
-                                            Console.WriteLine("YOU DON'T HAVE INTERNET YOU FOOL!");
-                                            throw new Exception("Did you unplig the WiFi?");
-                                        }
+                                        if (_hrm.IsSuccessStatusCode)
+                                            _hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
 
-                                        hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();
                                         fs.Dispose();
                                         fs.Close();
                                         Console.WriteLine($"{Thread.CurrentThread.Name}; Downloaded {Result["title"]}");
@@ -221,6 +230,7 @@
         }
         public static void CheckAndReviveBots()
         {
+            BotHandler BotHandle = new();
             if (!InternalProgramData.STOPPROGRAM) {
 
                 lock (botRespawnLocker)
@@ -243,7 +253,7 @@
                             for (float i = amountToRevive0; i < totalBots / 2 / 2; i++)
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                                Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
                                 x.Name = $"- bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
@@ -252,7 +262,7 @@
                             for (float i = amountToRevive; i < totalBots / 2 / 2; i++)
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
+                                Thread x = new(() => BotHandle.StartBot(false, (int)i * 2));
                                 x.Name = $"- bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
@@ -267,7 +277,7 @@
                             for (float i = amountToRevive; i < totalBots / 2; i++)
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                                Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
                                 x.Name = $"- bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
@@ -280,7 +290,7 @@
                             for (float i = amountToRevive; i < totalBots / 2; i++)
                             {
                                 //Execute bots according to the ammount specified on BotCount 🥶👌
-                                Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
+                                Thread x = new(() => BotHandle.StartBot(false, (int)i * 2));
                                 x.Name = $"- bot n{i}";
                                 x.IsBackground = true;
                                 x.Start();
@@ -289,13 +299,14 @@
                             //Console.WriteLine($"Current Total Bot Count: {BotStatus.aliveBots0.Count + BotStatus.aliveBots1.Count}");
 
                         } 
-                    } else
+                    } 
+                    else
                     {
                         float amountToRevive0 = totalBots - aliveBots0;
                         for (float i = amountToRevive0; i < totalBots; i++)
                         {
                             //Execute bots according to the ammount specified on BotCount 🥶👌
-                            Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                            Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
                             x.Name = $"- bot n{i}";
                             x.IsBackground = true;
                             x.Start();

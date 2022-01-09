@@ -81,13 +81,14 @@
         }
         public static void StartBots()
         {
+            BotHandler BotHandle = new();
             if (InternalProgramData.SimultaneousDownload)
             {
 
                 for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
                 {
                     //Execute bots according to the ammount specified on BotCount 🥶👌
-                    Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                    Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
                     x.Name = $"- bot n{i}";
                     x.IsBackground = true;
                     x.Start();
@@ -95,7 +96,7 @@
                 for (int i = 0; i < InternalProgramData.BotCount / 2; i++)
                 {
                     //Execute bots according to the ammount specified on BotCount 🥶👌
-                    Thread x = new(() => BotHandler.StartBot(false, (int)i * 2));
+                    Thread x = new(() => BotHandle.StartBot(false, (int)i * 2));
                     x.Name = $"- bot n{i}";
                     x.IsBackground = true;
                     x.Start();
@@ -106,7 +107,7 @@
                 for (int i = 0; i < InternalProgramData.BotCount; i++)
                 {
                     //Execute bots according to the ammount specified on BotCount 🥶👌
-                    Thread x = new(() => BotHandler.StartBot(true, (int)i * 2));
+                    Thread x = new(() => BotHandle.StartBot(true, (int)i * 2));
                     x.Name = $"- bot n{i}";
                     x.IsBackground = true;
                     x.Start();

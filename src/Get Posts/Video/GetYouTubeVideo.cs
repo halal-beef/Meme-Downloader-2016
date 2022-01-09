@@ -3,7 +3,7 @@
     internal class YouTubeDLP
     {
         public StringBuilder VideoLink { get; set; } = new("");
-        private static Object lockytdlp = new();
+        private static readonly Object lockytdlp = new();
         public void GetVideoAsMP4(string OutputPath)
         {
             lock (lockytdlp)
