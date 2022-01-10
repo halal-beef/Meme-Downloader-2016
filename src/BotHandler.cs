@@ -112,7 +112,6 @@
                             usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalChars));
                             sourceLink.Append(Result["url"].ToString());
                         }
-
                         StringBuilder PathToResult = new(Environment.CurrentDirectory + @"/Downloaded Content/" + @$"/{target}/" + usableName);
 
                         for (int i = 0; i < BotInformation.BlackListed.Count; i++)
@@ -164,7 +163,27 @@
                                  )
                             {
                                 //Normal Execution
-                                if (!PathToResult.ToString().Contains(".jpg") && !PathToResult.ToString().Contains(".png") && !PathToResult.ToString().Contains(".gif") && !PathToResult.ToString().Contains(".jpeg") && !PathToResult.ToString().Contains(".mp4"))
+                                if (sourceLink.ToString().Contains(".jpg"))
+                                {
+                                    PathToResult.Append(".jpg");
+                                } 
+                                else if (sourceLink.ToString().Contains(".png"))
+                                {
+                                    PathToResult.Append(".png");
+                                } 
+                                else if (sourceLink.ToString().Contains(".gif"))
+                                {
+                                    PathToResult.Append(".gif");
+                                } 
+                                else if (sourceLink.ToString().Contains(".jpeg")) 
+                                {
+                                    PathToResult.Append(".jpeg");
+                                } 
+                                else if (sourceLink.ToString().Contains(".mp4"))
+                                {
+                                    PathToResult.Append(".mp4");
+                                } 
+                                else
                                 {
                                     PathToResult.Append(".htm");
                                 }
