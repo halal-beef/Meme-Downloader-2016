@@ -3,7 +3,7 @@
     internal class BotHandler
     {
         //Web Related
-        private readonly HttpClient _httpClient = new(InternalProgramData.handler);
+        //private readonly HttpClient _httpClient = new(InternalProgramData.handler);
         private HttpResponseMessage _hrm = new();
 
         //Locks
@@ -131,7 +131,7 @@
                                 {
                                     FormattedLinks formattedLinks = GetRedditGallery.FormatLinks(data.ToString());
 
-                                    GetRedditGallery.GetGallery(PathToResult.ToString(), sourceLink.ToString(), formattedLinks, _httpClient);
+                                    GetRedditGallery.GetGallery(PathToResult.ToString(), sourceLink.ToString(), formattedLinks, InternalProgramData.client);
                                 }
                             }
                             else if (sourceLink.ToString().Contains("v.redd.it") && Result.Value<bool>("is_video"))
@@ -195,7 +195,7 @@
                                     {
                                         using FileStream fs = File.Create(PathToResult.ToString());
 
-                                        _hrm = _httpClient.GetAsync(sourceLink.ToString()).GetAwaiter().GetResult();
+                                        _hrm = InternalProgramData.client.GetAsync(sourceLink.ToString()).GetAwaiter().GetResult();
 
                                         if (_hrm.IsSuccessStatusCode)
                                             _hrm.Content.CopyToAsync(fs).GetAwaiter().GetResult();

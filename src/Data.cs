@@ -35,6 +35,7 @@
             UseCookies = true,
             AutomaticDecompression = DecompressionMethods.All
         };
+        public static readonly HttpClient client = new(handler);
     }
     internal struct BotInformation
     {
