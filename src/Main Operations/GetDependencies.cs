@@ -2,8 +2,16 @@
 {
     internal class DependencyManagment
     {
+        private static Object chmodLock = new();
         public static void GETLinuxDependencies()
         {
+            //Declare chmod.
+            Process chmod = new();
+            chmod.StartInfo.FileName = "chmod";
+            chmod.StartInfo.CreateNoWindow = true;
+            chmod.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            chmod.StartInfo.UseShellExecute = true;
+
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/Dependencies/");
 
@@ -17,6 +25,13 @@
                     hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                 }
                 File.SetAttributes(FFMPEGPATH, FileAttributes.Normal);
+
+                lock (chmodLock)
+                {
+                    chmod.StartInfo.Arguments = $"+x {FFMPEGPATH}";
+                    chmod.Start();
+                    chmod.WaitForExit();
+                }
             });
 
             Thread getlinuxFYTDLP = new(() =>
@@ -30,6 +45,13 @@
                     fs0.Close();
 
                 File.SetAttributes(YTDLPPATH, FileAttributes.Normal);
+
+                lock (chmodLock)
+                {
+                    chmod.StartInfo.Arguments = $"+x {YTDLPPATH}";
+                    chmod.Start();
+                    chmod.WaitForExit();
+                }
             });
 
             getlinuxFYTDLP.Name = "Get yt-dlp from Github Build!";

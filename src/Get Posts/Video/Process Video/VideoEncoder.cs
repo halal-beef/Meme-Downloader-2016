@@ -20,7 +20,7 @@
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                startInfo.FileName = "ffmpeg";
+                startInfo.FileName = $"{Environment.CurrentDirectory}/Dependencies/ffmpeg";
                 startInfo.UseShellExecute = true;
             }
             startInfo.Arguments = $"-i \"{PathToMedia}\" \"{FinalFilePath}\"";
@@ -50,7 +50,7 @@
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                startInfo.FileName = "ffmpeg";
+                startInfo.FileName = $"{Environment.CurrentDirectory}/Dependencies/ffmpeg";
                 startInfo.UseShellExecute = true;
             }
 

@@ -51,6 +51,7 @@ This are the default values of `config.json` after being created:
 ### **Thanks to**: 
 
   - TeNaihi for helping me test it :D
+  - SmallPP420 for implementing initial Linux support, and helping me testing it
 
 ------------------
 
