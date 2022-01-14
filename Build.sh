@@ -14,3 +14,5 @@ mv "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build-debug/Meme
 
 # Move debug build
 mv "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build-debug/Meme Downloader 2016" "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/Linux-DEBUG-Meme Downloader 2016"
+
+mv "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/Meme Downloader 2016" "/home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/Linux-Meme Downloader 2016"
