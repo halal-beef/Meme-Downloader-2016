@@ -2,21 +2,9 @@
 {
     internal class ProcessOptimizer
     {
-        public static void KillOrphanProcessPID(int PID)
+        public static void KillOrphanProcess(Process targetProcess)
         {
-            Process proc = new();
-            ProcessStartInfo info = new();
-
-            info.FileName = "taskkill";
-            info.Arguments = $" /f /pid {PID}";
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-
-            proc.StartInfo = info;
-
-            proc.Start();
-
-            proc.WaitForExit();
+            targetProcess.Kill(true);
         }
         /// <summary>
         /// Blacklist URL from being downloaded, use only if necessary, adding many links will make the program slower!
