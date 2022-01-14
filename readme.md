@@ -52,10 +52,3 @@ This are the default values of `config.json` after being created:
 
   - TeNaihi for helping me test it :D
   - SmallPP420 for implementing initial Linux support, and helping me testing it
-
-------------------
-
-
-## NOTES FOR FORKERS
-
-If you fork this repo you will need to add a repository secret named **TEST** with your github token as your value if u want to use the github ci script to build
