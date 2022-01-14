@@ -16,6 +16,7 @@
                     HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("https://github.com/usrDottik/Stuff/releases/download/fmpglin/ffmpeg").GetAwaiter().GetResult();
                     hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                 }
+                File.SetAttributes(FFMPEGPATH, FileAttributes.Normal);
             });
 
             Thread getlinuxFYTDLP = new(() =>
@@ -23,9 +24,12 @@
                 string YTDLPPATH = Environment.CurrentDirectory + @"/Dependencies/yt-dlp";
 
                 using FileStream fs0 = File.Create(YTDLPPATH);
-                HttpResponseMessage hrm5 = InternalProgramData.client.GetAsync("https://github.com/yt-dlp/yt-dlp/releases/download/2021.12.27/yt-dlp").GetAwaiter().GetResult();
-                hrm5.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
+                    HttpResponseMessage hrm5 = InternalProgramData.client.GetAsync("https://github.com/yt-dlp/yt-dlp/releases/download/2021.12.27/yt-dlp").GetAwaiter().GetResult();
+                    hrm5.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
+                    fs0.Dispose();
+                    fs0.Close();
 
+                File.SetAttributes(YTDLPPATH, FileAttributes.Normal);
             });
 
             getlinuxFYTDLP.Name = "Get yt-dlp from Github Build!";
