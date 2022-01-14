@@ -76,19 +76,35 @@
             }
 
             //GET Windows dependencies & Verify them
-
+            
             if (!Directory.Exists(Environment.CurrentDirectory + @"/Dependencies/"))
             {
                 Console.WriteLine("Getting Depedencies, please hold...");
-                DependencyManagment.GETWindowsDepedencies();
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    DependencyManagment.GETWindowsDependencies();
+                } 
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    DependencyManagment.GETLinuxDependencies();
+                }
             }
             else 
             {
                 Console.WriteLine("Verifying Install...");
-                DependencyManagment.VerifyInstall();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    DependencyManagment.VerifyInstallWindows();
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    DependencyManagment.VerifyInstallLinux();
+                }
+                
             }
 
-            if (!File.Exists(Environment.CurrentDirectory + @"\config.json"))
+            if (!File.Exists(Environment.CurrentDirectory + @"/config.json"))
             {
                 Console.WriteLine("Configuration file does not exist, using default configuration and creating one...");
                 ConfigurationManager.CreateConfigs(new Configurations());
@@ -100,7 +116,7 @@
                 ConfigurationManager.ApplyConfigs(ConfigurationManager.LoadConfigs());
             }
 
-            if (!File.Exists(Environment.CurrentDirectory + @"\blacklist.json"))
+            if (!File.Exists(Environment.CurrentDirectory + @"/blacklist.json"))
             {
                 Console.WriteLine("There isn't a blacklist available.");
             }

@@ -2,7 +2,8 @@
 {
     internal struct InternalProgramData
     {
-        public static readonly char[] illegalChars = { '?', '|', ':', '<', '>', '/', '*', '\\' };
+        public static readonly char[] illegalFileChars = Path.GetInvalidFileNameChars();
+        public static readonly char[] illegalPathChars = Path.GetInvalidPathChars();
 
         public static ulong MaxRepeatTimes = 0;
         public static ulong TimesRepeated = 0;

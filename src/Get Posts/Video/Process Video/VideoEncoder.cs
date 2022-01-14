@@ -14,7 +14,14 @@
             Process proc = new();
             ProcessStartInfo startInfo = new();
 
-            startInfo.FileName = "ffmpeg.exe";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                startInfo.FileName = "ffmpeg.exe";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                startInfo.FileName = "ffmpeg";
+            }
             startInfo.Arguments = $"-i \"{PathToMedia}\" \"{FinalFilePath}\"";
 
             startInfo.CreateNoWindow = true;
@@ -36,7 +43,15 @@
             Process proc = new();
             ProcessStartInfo startInfo = new();
 
-            startInfo.FileName = "ffmpeg.exe";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                startInfo.FileName = "ffmpeg.exe";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                startInfo.FileName = "ffmpeg";
+            }
+
             startInfo.Arguments = $"-i \"{PathToVideo}\" -i \"{PathToAudio}\" \"{FinalFilePath}\"";
 
             startInfo.CreateNoWindow = true;

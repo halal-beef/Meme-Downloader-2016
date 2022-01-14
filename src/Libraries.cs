@@ -6,6 +6,7 @@ global using System.Diagnostics;
 global using System.Net;
 global using System.Net.Http;
 global using System.Net.NetworkInformation;
+global using System.Runtime.InteropServices;
 
 //NUGET PACKAGES
 global using Newtonsoft.Json;

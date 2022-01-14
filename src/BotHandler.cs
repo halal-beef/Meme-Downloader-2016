@@ -103,13 +103,13 @@
                         try
                         {
                             //Avoid Illegal Names
-                            usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalChars));
+                            usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalFileChars).Trim(InternalProgramData.illegalPathChars));
                             sourceLink.Append(Result.Value<string>("url_overridden_by_dest"));
                         }
                         catch
                         {
                             //Avoid Illegal Names
-                            usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalChars));
+                            usableName.Append(Result["title"].ToString().Trim(InternalProgramData.illegalFileChars).Trim(InternalProgramData.illegalPathChars));
                             sourceLink.Append(Result["url"].ToString());
                         }
                         StringBuilder PathToResult = new(Environment.CurrentDirectory + @"/Downloaded Content/" + @$"/{target}/" + usableName);

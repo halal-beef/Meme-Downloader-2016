@@ -11,11 +11,7 @@ This app downloads can download stuff from a subreddit of your choice and throws
 
 This app runs 32 threads by default, and is (sometimes) VERY resource hungry on memory, some processes might stay as zombies, that means, they don't die, examples are ffmpeg, that can prevent you from deleting the program 
 
-**This app has some dependencies on Windows**: 
-
-  - taskkill
-
-## `config.json` template
+## How do I configure the program?
 
 This are the default values of `config.json` after being created:
 
@@ -42,16 +38,17 @@ This are the default values of `config.json` after being created:
 ### **NOTES**:
 
   - This program saves logs on `C:\Users\%USERNAME%\AppData\Local\Dottik\Meme Downloader 2016\Logs\log[LogDate].log`
+  - This program is compatible with Windows, Linux compatibility is on the makings.
 
 ------------------
 
-Credits:
+### **Credits**:
 
   - Original Idea: [SmallPP420](https://github.com/SmallPP420)
 
 ------------------
 
-Thanks to: 
+### **Thanks to**: 
 
   - TeNaihi for helping me test it :D
 

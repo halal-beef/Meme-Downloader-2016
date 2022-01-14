@@ -2,42 +2,98 @@
 {
     internal class DependencyManagment
     {
-        public static void GETWindowsDepedencies()
+        public static void GETLinuxDependencies()
+        {
+            Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
+            Directory.CreateDirectory(Environment.CurrentDirectory + @"/Dependencies/");
+
+            Thread getlinuxFFMPEG = new(() =>
+            {
+                //https://github.com/usrDottik/Stuff/releases/download/fmpglin/ffmpeg
+                string FFMPEGPATH = Environment.CurrentDirectory + @"/Dependencies/ffmpeg";
+                using (FileStream fs0 = File.Create(FFMPEGPATH))
+                {
+                    HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("https://github.com/usrDottik/Stuff/releases/download/fmpglin/ffmpeg").GetAwaiter().GetResult();
+                    hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
+                }
+            });
+
+            Thread getlinuxFYTDLP = new(() =>
+            {
+                string YTDLPPATH = Environment.CurrentDirectory + @"/Dependencies/yt-dlp";
+
+                using FileStream fs0 = File.Create(YTDLPPATH);
+                HttpResponseMessage hrm5 = InternalProgramData.client.GetAsync("https://github.com/yt-dlp/yt-dlp/releases/download/2021.12.27/yt-dlp").GetAwaiter().GetResult();
+                hrm5.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
+
+            });
+
+            getlinuxFYTDLP.Name = "Get yt-dlp from Github Build!";
+
+            getlinuxFFMPEG.Name = "Get FFMPEG from Github Build!";
+            getlinuxFYTDLP.Start();
+            getlinuxFFMPEG.Start();
+
+            Console.Write("Getting ffmpeg and YouTube-dlp");
+            while (getlinuxFFMPEG.IsAlive || getlinuxFYTDLP.IsAlive)
+            {
+                Console.Write('.');
+                Thread.Sleep(1000);
+            }
+
+            Console.Write("\nDone! Proceeding with program execution in 5 seconds");
+
+            new Thread(() =>
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Console.Write(".");
+                    Thread.Sleep(1666);
+                }
+            }).Start();
+
+
+            Thread.Sleep(5000);
+
+            if (!InternalProgramData.runningCi)
+                Console.Clear();
+        }
+        public static void GETWindowsDependencies()
         {
 
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/TEMP/");
             Directory.CreateDirectory(Environment.CurrentDirectory + @"/Dependencies/");
 
-            Thread getFFMPEG = new(() =>
+            Thread getwinFFMPEG = new(() =>
             {
                 string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
                 using (FileStream fs0 = File.Create(FFMPEGZIPPATH))
                 {
-                    HttpResponseMessage hrm4 = new HttpClient(handler: InternalProgramData.handler).GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2022-01-06-12-21/ffmpeg-N-105193-g2b541b8c1d-win64-gpl.zip").GetAwaiter().GetResult();
+                    HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2022-01-06-12-21/ffmpeg-N-105193-g2b541b8c1d-win64-gpl.zip").GetAwaiter().GetResult();
                     hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                 }
                 ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
                 File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-N-105193-g2b541b8c1d-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", true);
             });
 
-            Thread getYTDLP = new(() =>
+            Thread getwinYTDLP = new(() =>
             {
                 string YTDLPPATH = Environment.CurrentDirectory + @"/Dependencies/yt-dlp.exe";
 
                 using FileStream fs0 = File.Create(YTDLPPATH);
-                HttpResponseMessage hrm5 = new HttpClient(handler: InternalProgramData.handler).GetAsync("https://github.com/yt-dlp/yt-dlp/releases/download/2021.12.27/yt-dlp.exe").GetAwaiter().GetResult();
+                HttpResponseMessage hrm5 = InternalProgramData.client.GetAsync("https://github.com/yt-dlp/yt-dlp/releases/download/2021.12.27/yt-dlp.exe").GetAwaiter().GetResult();
                 hrm5.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
 
             });
 
-            getYTDLP.Name = "Get yt-dlp from Github Build!";
+            getwinYTDLP.Name = "Get yt-dlp from Github Build!";
 
-            getFFMPEG.Name = "Get FFMPEG from Github Build!";
-            getYTDLP.Start();
-            getFFMPEG.Start();
+            getwinFFMPEG.Name = "Get FFMPEG from Github Build!";
+            getwinYTDLP.Start();
+            getwinFFMPEG.Start();
 
             Console.Write("Getting ffmpeg and YouTube-dlp");
-            while (getFFMPEG.IsAlive || getYTDLP.IsAlive)
+            while (getwinFFMPEG.IsAlive || getwinYTDLP.IsAlive)
             {
                 Console.Write('.');
                 Thread.Sleep(1000);
@@ -89,7 +145,7 @@
                 return false;
             }
         }
-        public static void VerifyInstall()
+        public static void VerifyInstallWindows()
         {
             try
             {
@@ -103,13 +159,36 @@
                 if (!ytdlpOK || !ffmpegOK)
                 {
                     Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
-                    DependencyManagment.GETWindowsDepedencies();
+                    DependencyManagment.GETWindowsDependencies();
                 }
             }
             catch
             {
                 Console.WriteLine("Some program dependencies are missing! Redownloading them...");
-                DependencyManagment.GETWindowsDepedencies();
+                DependencyManagment.GETWindowsDependencies();
+            }
+        }
+        public static void VerifyInstallLinux()
+        {
+            try
+            {
+                const string
+                    ytdlpsha256 = "254289d79a896b828720e3120bbdd00e48546009cfabbe5d86fa4bb9f9e77d48",
+                   ffmpegsha256 = "B8ABA52A98315C8B23917CCCEFA86D11CD2D630C459009FECECE3752AD2155DC";
+
+                bool ytdlpOK = VerifyFileIntegrity(ytdlpsha256, Environment.CurrentDirectory + @"/Dependencies/yt-dlp");
+                bool ffmpegOK = VerifyFileIntegrity(ffmpegsha256, Environment.CurrentDirectory + @"/Dependencies/ffmpeg");
+
+                if (!ytdlpOK || !ffmpegOK)
+                {
+                    Console.WriteLine("The program dependencies are corrupted! Redownloading them...");
+                    DependencyManagment.GETLinuxDependencies();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Some program dependencies are missing! Redownloading them...");
+                DependencyManagment.GETLinuxDependencies();
             }
         }
     }
