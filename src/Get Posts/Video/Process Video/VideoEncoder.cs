@@ -21,6 +21,7 @@
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 startInfo.FileName = "ffmpeg";
+                startInfo.UseShellExecute = true;
             }
             startInfo.Arguments = $"-i \"{PathToMedia}\" \"{FinalFilePath}\"";
 
@@ -50,6 +51,7 @@
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 startInfo.FileName = "ffmpeg";
+                startInfo.UseShellExecute = true;
             }
 
             startInfo.Arguments = $"-i \"{PathToVideo}\" -i \"{PathToAudio}\" \"{FinalFilePath}\"";

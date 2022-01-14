@@ -19,6 +19,7 @@
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     pSIytdlp.FileName = "yt-dlp";
+                    pSIytdlp.UseShellExecute = true;
                 }
                 pSIytdlp.Arguments = $"--no-check-certificates --geo-bypass --no-playlist --concurrent-fragments 2 --hls-use-mpegts --no-windows-filenames --remux-video mp4 -o \"{OutputPath}\" \"{VideoLink}\"";
 
