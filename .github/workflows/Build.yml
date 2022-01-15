@@ -24,7 +24,7 @@ jobs:
         ./Build.sh && \
         echo "::set-output name=today::$(date +"%d-%m-%y--%H-%M-%S")"
     
-    - name: Upload Windows && Linux Relese and Debug
+    - name: Upload Windows && Linux Release and Debug
       uses: softprops/action-gh-release@v1
       with:
         files: |
