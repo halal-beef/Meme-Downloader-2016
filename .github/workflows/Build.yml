@@ -32,7 +32,7 @@ jobs:
             /home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/DEBUG-Meme Downloader 2016.exe
             /home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/Linux-Meme Downloader 2016
             /home/runner/work/Meme-Downloader-2016/Meme-Downloader-2016/build/Linux-DEBUG-Meme Downloader 2016
-        name: Meme Downloader 2016 Auto-Build (Windows)
+        name: Meme Downloader 2016 Auto-Build
         tag_name: "${{ steps.date.outputs.today }}--Win"
       env:
         GITHUB_TOKEN: ${{ secrets.TEST }}
