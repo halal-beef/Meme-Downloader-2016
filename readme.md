@@ -38,7 +38,7 @@ This are the default values of `config.json` after being created:
 ### **NOTES**:
 
   - This program saves logs on `C:\Users\%USERNAME%\AppData\Local\Dottik\Meme Downloader 2016\Logs\log[LogDate].log`
-  - This program is compatible with Windows, Linux compatibility is on the makings.
+  - This program is compatible with Windows and Linux.
 
 ------------------
 
