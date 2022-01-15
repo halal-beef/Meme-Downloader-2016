@@ -199,7 +199,7 @@
             try
             {
                 const string
-                    ytdlpsha256 = "254289d79a896b828720e3120bbdd00e48546009cfabbe5d86fa4bb9f9e77d48",
+                    ytdlpsha256 = "254289D79A896B828720E3120BBDD00E48546009CFABBE5D86FA4BB9F9E77D48",
                    ffmpegsha256 = "B8ABA52A98315C8B23917CCCEFA86D11CD2D630C459009FECECE3752AD2155DC";
 
                 bool ytdlpOK = VerifyFileIntegrity(ytdlpsha256, Environment.CurrentDirectory + @"/Dependencies/yt-dlp");
