@@ -50,7 +50,7 @@
         public string TargetSubReddit1 = "dankmemes";
         public string TargetSubReddit2 = "memes";
         public string TargetSubReddit3 = "crappyoffbrands";
-        public string TargetSubReddit4 = "nocontextpics";
+        public string TargetSubReddit4 = "watchpeopledieinside";
         public string TargetSubReddit5 = "arabfunny";
         public ulong MaxRepeatTimes = 10000;
         public bool SimultaneousDownload = true;
