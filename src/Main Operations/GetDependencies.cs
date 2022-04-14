@@ -95,11 +95,11 @@
                 string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
                 using (FileStream fs0 = File.Create(FFMPEGZIPPATH))
                 {
-                    HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2022-01-06-12-21/ffmpeg-N-105193-g2b541b8c1d-win64-gpl.zip").GetAwaiter().GetResult();
+                    HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2022-04-13-16-43/ffmpeg-N-106605-gf67403edb3-win64-gpl.zip").GetAwaiter().GetResult();
                     hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                 }
                 ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
-                File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-N-105193-g2b541b8c1d-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", true);
+                File.Move(Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/ffmpeg-N-106605-gf67403edb3-win64-gpl/bin/ffmpeg.exe", Environment.CurrentDirectory + @"/Dependencies/ffmpeg.exe", true);
             });
 
             Thread getwinYTDLP = new(() =>
