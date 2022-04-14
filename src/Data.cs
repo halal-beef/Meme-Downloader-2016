@@ -54,6 +54,6 @@
         public string TargetSubReddit5 = "arabfunny";
         public ulong MaxRepeatTimes = 10000;
         public bool SimultaneousDownload = true;
-        public int ThreadCount = 32;
+        public int ThreadCount = 128;
     }
 }
