@@ -95,7 +95,7 @@
                 string FFMPEGZIPPATH = Environment.CurrentDirectory + @"/TEMP/FFMPEG-masterx64win.zip";
                 using (FileStream fs0 = File.Create(FFMPEGZIPPATH))
                 {
-                    HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("ffmpeg-N-106605-gf67403edb3-win64-gpl.zip").GetAwaiter().GetResult();
+                    HttpResponseMessage hrm4 = InternalProgramData.client.GetAsync("https://github.com/SmallPP420/MD2016-FFMPEG-MIRRORS/releases/download/Win/ffmpeg-N-106605-gf67403edb3-win64-gpl.zip").GetAwaiter().GetResult();
                     hrm4.Content.CopyToAsync(fs0).GetAwaiter().GetResult();
                 }
                 ZipFile.ExtractToDirectory(FFMPEGZIPPATH, Environment.CurrentDirectory + @"/TEMP/FFMPEGFILES/");
